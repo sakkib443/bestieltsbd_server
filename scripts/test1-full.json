@@ -1,0 +1,605 @@
+{
+  "title": "Listening Test 01",
+  "mainAudioUrl": "",
+  "sections": [
+    {
+      "sectionNumber": 1,
+      "title": "Part 1",
+      "instructions": "Questions 1–10",
+      "audioUrl": "",
+      "context": "A conversation between two people about a recruitment agency.",
+      "questions": [
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 1–10</strong><br/>Complete the notes below.<br/>Write <strong>ONE WORD AND/OR A NUMBER</strong> for each answer."
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 1,
+          "questionType": "note-completion",
+          "questionText": "Name of agent: Becky ________",
+          "options": [],
+          "correctAnswer": "Jamieson",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 2,
+          "questionType": "note-completion",
+          "questionText": "Best to call her in the ________",
+          "options": [],
+          "correctAnswer": "afternoon",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Typical jobs</strong><br/><ul><li>Clerical and admin roles, mainly in the finance industry</li></ul>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 3,
+          "questionType": "note-completion",
+          "questionText": "Must have good ________ skills",
+          "options": [],
+          "correctAnswer": "communication",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 4,
+          "questionType": "note-completion",
+          "questionText": "Jobs are usually for at least one ________",
+          "options": [],
+          "correctAnswer": "week",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 5,
+          "questionType": "note-completion",
+          "questionText": "Pay is usually £ ________ per hour",
+          "options": [],
+          "correctAnswer": "10",
+          "acceptableAnswers": [
+            "ten",
+            "10"
+          ],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Registration process</strong>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 6,
+          "questionType": "note-completion",
+          "questionText": "Wear a ________ to the interview",
+          "options": [],
+          "correctAnswer": "suit",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 7,
+          "questionType": "note-completion",
+          "questionText": "Must bring your ________ to the interview",
+          "options": [],
+          "correctAnswer": "passport",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 8,
+          "questionType": "note-completion",
+          "questionText": "They will ask questions about each applicant's ________",
+          "options": [],
+          "correctAnswer": "personality",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Advantages of using an agency</strong>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 9,
+          "questionType": "note-completion",
+          "questionText": "The ________ you receive at interview will benefit you",
+          "options": [],
+          "correctAnswer": "feedback",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<ul><li>Will get access to vacancies which are not advertised</li></ul>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 10,
+          "questionType": "note-completion",
+          "questionText": "Less ________ is involved in applying for jobs",
+          "options": [],
+          "correctAnswer": "time",
+          "acceptableAnswers": [],
+          "marks": 1
+        }
+      ]
+    },
+    {
+      "sectionNumber": 2,
+      "title": "Part 2",
+      "instructions": "Questions 11–20",
+      "audioUrl": "",
+      "context": "A talk about Matthews Island Holidays and a timetable for Isle of Man holiday.",
+      "questions": [
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 11–14</strong><br/>Choose the correct letter, <strong>A</strong>, <strong>B</strong> or <strong>C</strong>.<br/><br/><strong>Matthews Island Holidays</strong>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 11,
+          "questionType": "multiple-choice",
+          "questionText": "According to the speaker, the company",
+          "options": [
+            "A. has been in business for longer than most of its competitors.",
+            "B. arranges holidays to more destinations than its competitors.",
+            "C. has more customers than its competitors."
+          ],
+          "correctAnswer": "A",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 12,
+          "questionType": "multiple-choice",
+          "questionText": "Where can customers meet the tour manager before travelling to the Isle of Man?",
+          "options": [
+            "A. Liverpool",
+            "B. Heysham",
+            "C. Luton"
+          ],
+          "correctAnswer": "B",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 13,
+          "questionType": "multiple-choice",
+          "questionText": "How many lunches are included in the price of the holiday?",
+          "options": [
+            "A. three",
+            "B. four",
+            "C. five"
+          ],
+          "correctAnswer": "A",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 14,
+          "questionType": "multiple-choice",
+          "questionText": "Customers have to pay extra for",
+          "options": [
+            "A. guaranteeing themselves a larger room.",
+            "B. booking at short notice.",
+            "C. transferring to another date."
+          ],
+          "correctAnswer": "C",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 15–20</strong><br/>Complete the table below.<br/>Write <strong>ONE WORD AND/OR A NUMBER</strong> for each answer.<br/><br/><strong>Timetable for Isle of Man holiday</strong><br/><table border='1' style='border-collapse:collapse;width:100%;font-size:13px'><thead><tr><th style='padding:6px'>Day</th><th style='padding:6px'>Activity</th><th style='padding:6px'>Notes</th></tr></thead><tbody><tr><td style='padding:6px'>Day 1</td><td style='padding:6px'>Arrive</td><td style='padding:6px'>Introduction by manager. Hotel dining room has view of the <strong>[15]</strong></td></tr><tr><td style='padding:6px'>Day 2</td><td style='padding:6px'>Tynwald Exhibition and Peel</td><td style='padding:6px'>Tynwald may have been founded in <strong>[16]</strong>, not 979</td></tr><tr><td style='padding:6px'>Day 3</td><td style='padding:6px'>Trip to Snaefell</td><td style='padding:6px'>Travel along promenade in a tram; train to Laxey; train to the <strong>[17]</strong> of Snaefell</td></tr><tr><td style='padding:6px'>Day 4</td><td style='padding:6px'>Free day</td><td style='padding:6px'>Company provides a <strong>[18]</strong> for local transport and heritage sites</td></tr><tr><td style='padding:6px'>Day 5</td><td style='padding:6px'>Take the <strong>[19]</strong> railway train from Douglas to Port Erin</td><td style='padding:6px'>Free time, then coach to Castletown — former <strong>[20]</strong> has old castle</td></tr><tr><td style='padding:6px'>Day 6</td><td style='padding:6px'>Leave</td><td style='padding:6px'>Leave the island by ferry or plane</td></tr></tbody></table>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 15,
+          "questionType": "table-completion",
+          "questionText": "Hotel dining room has view of the ________",
+          "options": [],
+          "correctAnswer": "river",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 16,
+          "questionType": "table-completion",
+          "questionText": "Tynwald may have been founded in ________",
+          "options": [],
+          "correctAnswer": "1422",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 17,
+          "questionType": "table-completion",
+          "questionText": "Train to the ________ of Snaefell",
+          "options": [],
+          "correctAnswer": "top",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 18,
+          "questionType": "table-completion",
+          "questionText": "Company provides a ________ for local transport and heritage sites",
+          "options": [],
+          "correctAnswer": "pass",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 19,
+          "questionType": "table-completion",
+          "questionText": "Take the ________ railway train from Douglas to Port Erin",
+          "options": [],
+          "correctAnswer": "steam",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 20,
+          "questionType": "table-completion",
+          "questionText": "Coach to Castletown — former ________ has old castle",
+          "options": [],
+          "correctAnswer": "capital",
+          "acceptableAnswers": [],
+          "marks": 1
+        }
+      ]
+    },
+    {
+      "sectionNumber": 3,
+      "title": "Part 3",
+      "instructions": "Questions 21–30",
+      "audioUrl": "",
+      "context": "A conversation between two students about birth order and personality traits.",
+      "questions": [
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 21–26</strong><br/>What did findings of previous research claim about the personality traits a child is likely to have because of their position in the family?<br/><br/>Choose <strong>SIX</strong> answers from the box and write the correct letter, <strong>A–H</strong>, next to Questions 21–26.<br/><br/><strong>Personality Traits</strong><br/>A &nbsp; outgoing<br/>B &nbsp; selfish<br/>C &nbsp; independent<br/>D &nbsp; attention-seeking<br/>E &nbsp; introverted<br/>F &nbsp; co-operative<br/>G &nbsp; caring<br/>H &nbsp; competitive"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 21,
+          "questionType": "matching",
+          "questionText": "the eldest child",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correctAnswer": "G",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 22,
+          "questionType": "matching",
+          "questionText": "a middle child",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correctAnswer": "F",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 23,
+          "questionType": "matching",
+          "questionText": "the youngest child",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correctAnswer": "A",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 24,
+          "questionType": "matching",
+          "questionText": "a twin",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correctAnswer": "E",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 25,
+          "questionType": "matching",
+          "questionText": "an only child",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correctAnswer": "B",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 26,
+          "questionType": "matching",
+          "questionText": "a child with much older siblings",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correctAnswer": "C",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 27–28</strong><br/>Choose the correct letter, <strong>A</strong>, <strong>B</strong> or <strong>C</strong>."
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 27,
+          "questionType": "multiple-choice",
+          "questionText": "What do the speakers say about the evidence relating to birth order and academic success?",
+          "options": [
+            "A. There is conflicting evidence about whether oldest children perform best in intelligence tests.",
+            "B. There is little doubt that birth order has less influence on academic achievement than socio-economic status.",
+            "C. Some studies have neglected to include important factors such as family size."
+          ],
+          "correctAnswer": "C",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 28,
+          "questionType": "multiple-choice",
+          "questionText": "What does Ruth think is surprising about the difference in oldest children's academic performance?",
+          "options": [
+            "A. It is mainly thanks to their roles as teachers for their younger siblings.",
+            "B. The advantages they have only lead to a slightly higher level of achievement.",
+            "C. The extra parental attention they receive at a young age makes little difference."
+          ],
+          "correctAnswer": "A",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 29–30</strong><br/>Choose <strong>TWO</strong> letters, A–E.<br/><br/>Which <strong>TWO</strong> experiences of sibling rivalry do the speakers agree has been valuable for them?"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 29,
+          "questionType": "multiple-choice-multi",
+          "questionText": "Which TWO experiences of sibling rivalry do the speakers agree has been valuable for them?",
+          "options": [
+            "A. learning to share",
+            "B. learning to stand up for oneself",
+            "C. learning to be a good loser",
+            "D. learning to be tolerant",
+            "E. learning to say sorry"
+          ],
+          "correctAnswer": "B",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 30,
+          "questionType": "multiple-choice-multi",
+          "questionText": "Which TWO experiences of sibling rivalry do the speakers agree has been valuable for them?",
+          "options": [
+            "A. learning to share",
+            "B. learning to stand up for oneself",
+            "C. learning to be a good loser",
+            "D. learning to be tolerant",
+            "E. learning to say sorry"
+          ],
+          "correctAnswer": "D",
+          "acceptableAnswers": [],
+          "marks": 1
+        }
+      ]
+    },
+    {
+      "sectionNumber": 4,
+      "title": "Part 4",
+      "instructions": "Questions 31–40",
+      "audioUrl": "",
+      "context": "A lecture about the eucalyptus tree in Australia — its importance, diseases, and the effect of bushfires.",
+      "questions": [
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 31–40</strong><br/>Complete the notes below.<br/>Write <strong>ONE WORD ONLY</strong> for each answer.<br/><br/><strong>The Eucalyptus Tree in Australia</strong>"
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Importance</strong>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 31,
+          "questionType": "note-completion",
+          "questionText": "It provides ________ and food for a wide range of species",
+          "options": [],
+          "correctAnswer": "shelter",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 32,
+          "questionType": "note-completion",
+          "questionText": "Its leaves provide ________ which is used to make a disinfectant",
+          "options": [],
+          "correctAnswer": "oil",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Reasons for present decline in number</strong><br/><strong>A) Diseases</strong><br/><strong>(i) 'Mundulla Yellows'</strong><ul><li>Cause – lime used for making <strong>[33]</strong> was absorbed</li><li>Trees were unable to take in necessary iron through their roots</li></ul>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 33,
+          "questionType": "note-completion",
+          "questionText": "Cause – lime used for making ________ was absorbed",
+          "options": [],
+          "correctAnswer": "roads",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>(ii) 'Bell-miner Associated Die-back'</strong><ul><li>Cause – <strong>[34]</strong> feed on eucalyptus leaves</li><li>They secrete a substance containing sugar</li><li>Bell-miner birds are attracted by this and keep away other species</li></ul>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 34,
+          "questionType": "note-completion",
+          "questionText": "Cause – ________ feed on eucalyptus leaves",
+          "options": [],
+          "correctAnswer": "insects",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>B) Bushfires</strong><br/>William Jackson's theory:<br/><ul><li>High-frequency bushfires have impact on vegetation, resulting in the growth of <strong>[35]</strong></li><li>Mid-frequency bushfires result in the growth of eucalyptus forests, because they:</li></ul>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 35,
+          "questionType": "note-completion",
+          "questionText": "High-frequency bushfires result in the growth of ________",
+          "options": [],
+          "correctAnswer": "grass",
+          "acceptableAnswers": [
+            "grasses",
+            "grass"
+          ],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 36,
+          "questionType": "note-completion",
+          "questionText": "Make more ________ available to the trees",
+          "options": [],
+          "correctAnswer": "water",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 37,
+          "questionType": "note-completion",
+          "questionText": "Maintain the quality of the ________",
+          "options": [],
+          "correctAnswer": "soil",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<ul><li>Low-frequency bushfires result in the growth of <strong>[38]</strong> rainforest, which is:</li></ul>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 38,
+          "questionType": "note-completion",
+          "questionText": "Low-frequency bushfires result in the growth of ________ rainforest",
+          "options": [],
+          "correctAnswer": "dry",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 39,
+          "questionType": "note-completion",
+          "questionText": "A ________ ecosystem",
+          "options": [],
+          "correctAnswer": "simple",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 40,
+          "questionType": "note-completion",
+          "questionText": "An ideal environment for the ________ of the bell-miner",
+          "options": [],
+          "correctAnswer": "nest",
+          "acceptableAnswers": [
+            "nests",
+            "nest"
+          ],
+          "marks": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,689 @@
+{
+  "title": "Listening Test 02",
+  "mainAudioUrl": "https://res.cloudinary.com/dxxlfzz0i/video/upload/v1771738424/ielts/audio/hggsozzfybqe3dwoefos.mp4",
+  "sections": [
+    {
+      "sectionNumber": 1,
+      "title": "Part 1",
+      "instructions": "Questions 1–10",
+      "audioUrl": "",
+      "context": "A conversation about children's engineering workshops.",
+      "questions": [
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 1–10</strong><br/>Complete the notes below.<br/>Write <strong>ONE WORD AND/OR A NUMBER</strong> for each answer."
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Children's Engineering Workshops</strong><br/><br/><strong>Tiny Engineers (ages 4-5)</strong><br/><br/><strong>Activities</strong>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 1,
+          "questionType": "note-completion",
+          "questionText": "Create a cover for an ________ so they can drop it from a height without breaking it.",
+          "options": [],
+          "correctAnswer": "egg",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 2,
+          "questionType": "note-completion",
+          "questionText": "Take part in a competition to build the tallest ________.",
+          "options": [],
+          "correctAnswer": "tower",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 3,
+          "questionType": "note-completion",
+          "questionText": "Make a ________ powered by a balloon.",
+          "options": [],
+          "correctAnswer": "car",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Junior Engineers (ages 6-8)</strong><br/><br/><strong>Activities:</strong>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 4,
+          "questionType": "note-completion",
+          "questionText": "Build model cars, trucks and ________ and learn how to program them so they can move.",
+          "options": [],
+          "correctAnswer": "animals",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 5,
+          "questionType": "note-completion",
+          "questionText": "Take part in a competition to build the longest ________ using card and wood.",
+          "options": [],
+          "correctAnswer": "bridge",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 6,
+          "questionType": "note-completion",
+          "questionText": "Create a short ________ with special software.",
+          "options": [],
+          "correctAnswer": "movie",
+          "acceptableAnswers": [
+            "film",
+            "movie"
+          ],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 7,
+          "questionType": "note-completion",
+          "questionText": "Build, ________ and program a humanoid robot.",
+          "options": [],
+          "correctAnswer": "decorate",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "Cost for a five-week block: £50"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 8,
+          "questionType": "note-completion",
+          "questionText": "Held on ________ from 10 am to 11 am",
+          "options": [],
+          "correctAnswer": "Wednesdays",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Location</strong>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 9,
+          "questionType": "note-completion",
+          "questionText": "Building 10A, ________ Industrial Estate, Grasford",
+          "options": [],
+          "correctAnswer": "Fradstone",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 10,
+          "questionType": "note-completion",
+          "questionText": "Plenty of ________ is available.",
+          "options": [],
+          "correctAnswer": "parking",
+          "acceptableAnswers": [],
+          "marks": 1
+        }
+      ]
+    },
+    {
+      "sectionNumber": 2,
+      "title": "Part 2",
+      "instructions": "Questions 11–20",
+      "audioUrl": "",
+      "context": "A talk about Stevenson's company and a tour of its site.",
+      "questions": [
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 11–14</strong><br/>Choose the correct letter, <strong>A</strong>, <strong>B</strong> or <strong>C</strong>."
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 11,
+          "questionType": "multiple-choice",
+          "questionText": "Stevenson's was founded in",
+          "options": [
+            "A. 1923.",
+            "B. 1924.",
+            "C. 1926."
+          ],
+          "correctAnswer": "C",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 12,
+          "questionType": "multiple-choice",
+          "questionText": "Originally, Stevenson's manufactured goods for",
+          "options": [
+            "A. the healthcare industry.",
+            "B. the automotive industry.",
+            "C. the machine tools industry."
+          ],
+          "correctAnswer": "A",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 13,
+          "questionType": "multiple-choice",
+          "questionText": "What does the speaker say about the company premises?",
+          "options": [
+            "A. The company has recently moved.",
+            "B. The company has no plans to move.",
+            "C. The company is going to move shortly."
+          ],
+          "correctAnswer": "B",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 14,
+          "questionType": "multiple-choice",
+          "questionText": "The programme for the work experience group includes",
+          "options": [
+            "A. time to do research.",
+            "B. meetings with a teacher.",
+            "C. talks by staff."
+          ],
+          "correctAnswer": "C",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 15–20</strong><br/>Label the map below.<br/>Write the correct letter, <strong>A–J</strong>, next to Questions 15–20.<br/><br/><strong>Plan of Stevenson's site</strong><br/><em>The map shows a factory site with rooms labeled A through J. The factory is at the top. Below it are rooms A, B (top row), C (right side), D, E (middle row), F (left of courtyard), an Open Courtyard in the center, G (right of courtyard), and H, I, J (bottom row) next to Reception. Main Road is at the bottom, Access Road is on the right side.</em>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 15,
+          "questionType": "map-labeling",
+          "questionText": "coffee room",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J"
+          ],
+          "correctAnswer": "H",
+          "acceptableAnswers": [],
+          "imageUrl": "https://res.cloudinary.com/dxxlfzz0i/image/upload/v1771738513/ielts/images/z6kjdml5h1ygs4vgcrwl.webp",
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 16,
+          "questionType": "map-labeling",
+          "questionText": "warehouse",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J"
+          ],
+          "correctAnswer": "C",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 17,
+          "questionType": "map-labeling",
+          "questionText": "staff canteen",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J"
+          ],
+          "correctAnswer": "G",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 18,
+          "questionType": "map-labeling",
+          "questionText": "meeting room",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J"
+          ],
+          "correctAnswer": "B",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 19,
+          "questionType": "map-labeling",
+          "questionText": "human resources",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J"
+          ],
+          "correctAnswer": "I",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 20,
+          "questionType": "map-labeling",
+          "questionText": "boardroom",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J"
+          ],
+          "correctAnswer": "A",
+          "acceptableAnswers": [],
+          "marks": 1
+        }
+      ]
+    },
+    {
+      "sectionNumber": 3,
+      "title": "Part 3",
+      "instructions": "Questions 21–30",
+      "audioUrl": "",
+      "context": "A discussion between two students, Jess and Tom, about their art projects.",
+      "questions": [
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 21-22</strong><br/>Choose <strong>TWO</strong> letters, <strong>A-E</strong>."
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 21,
+          "questionType": "multiple-choice-multi",
+          "questionText": "Which TWO parts of the introductory stage to their art projects do Jess and Tom agree were useful?",
+          "options": [
+            "A. the Bird Park visit",
+            "B. the workshop sessions",
+            "C. the Natural History Museum visit",
+            "D. the projects done in previous years",
+            "E. the handouts with research sources"
+          ],
+          "correctAnswer": "C",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 22,
+          "questionType": "multiple-choice-multi",
+          "questionText": "Which TWO parts of the introductory stage to their art projects do Jess and Tom agree were useful?",
+          "options": [
+            "A. the Bird Park visit",
+            "B. the workshop sessions",
+            "C. the Natural History Museum visit",
+            "D. the projects done in previous years",
+            "E. the handouts with research sources"
+          ],
+          "correctAnswer": "E",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 23-24</strong><br/>Choose <strong>TWO</strong> letters, <strong>A-E</strong>."
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 23,
+          "questionType": "multiple-choice-multi",
+          "questionText": "In which TWO ways do both Jess and Tom decide to change their proposals?",
+          "options": [
+            "A. by giving a rationale for their action plans",
+            "B. by being less specific about the outcome",
+            "C. by adding a video diary presentation",
+            "D. by providing a timeline and a mind map",
+            "E. by making their notes more evaluative"
+          ],
+          "correctAnswer": "B",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 24,
+          "questionType": "multiple-choice-multi",
+          "questionText": "In which TWO ways do both Jess and Tom decide to change their proposals?",
+          "options": [
+            "A. by giving a rationale for their action plans",
+            "B. by being less specific about the outcome",
+            "C. by adding a video diary presentation",
+            "D. by providing a timeline and a mind map",
+            "E. by making their notes more evaluative"
+          ],
+          "correctAnswer": "E",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 25-30</strong><br/>Which personal meaning do the students decide to give to each of the following pictures?<br/>Choose <strong>SIX</strong> answers from the box and write the correct letter, <strong>A-H</strong>, next to Questions.<br/><br/><strong>Personal meanings</strong><br/>A &nbsp; a childhood memory<br/>B &nbsp; hope for the future<br/>C &nbsp; fast movement<br/>D &nbsp; a potential threat<br/>E &nbsp; the power of colour<br/>F &nbsp; the continuity of life<br/>G &nbsp; protection of nature<br/>H &nbsp; a confused attitude to nature"
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Pictures</strong>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 25,
+          "questionType": "matching",
+          "questionText": "Falcon (Landseer)",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correctAnswer": "D",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 26,
+          "questionType": "matching",
+          "questionText": "Fish hawk (Audubon)",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correctAnswer": "C",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 27,
+          "questionType": "matching",
+          "questionText": "Kingfisher (van Gogh)",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correctAnswer": "A",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 28,
+          "questionType": "matching",
+          "questionText": "Portrait of William Wells",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correctAnswer": "H",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 29,
+          "questionType": "matching",
+          "questionText": "Vairumati (Gauguin)",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correctAnswer": "F",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 30,
+          "questionType": "matching",
+          "questionText": "Portrait of Giovanni de Medici",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H"
+          ],
+          "correctAnswer": "G",
+          "acceptableAnswers": [],
+          "marks": 1
+        }
+      ]
+    },
+    {
+      "sectionNumber": 4,
+      "title": "Part 4",
+      "instructions": "Questions 31–40",
+      "audioUrl": "",
+      "context": "A lecture about Stoicism.",
+      "questions": [
+        {
+          "blockType": "instruction",
+          "content": "<strong>Questions 31-40</strong><br/>Complete the notes below.<br/>Write <strong>ONE WORD ONLY</strong> for each answer."
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong style='font-size:16px;'>Stoicism</strong>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 31,
+          "questionType": "note-completion",
+          "questionText": "Stoicism is still relevant today because of its ________ appeal.",
+          "options": [],
+          "correctAnswer": "practical",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Ancient Stoics</strong><ul style='margin:4px 0;'><li>Stoicism was founded over 2,000 years ago in Greece.</li></ul>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 32,
+          "questionType": "note-completion",
+          "questionText": "The Stoics' ideas are surprisingly well known, despite not being intended for ________",
+          "options": [],
+          "correctAnswer": "publication",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Stoic principles</strong><ul style='margin:4px 0;'><li>Happiness could be achieved by leading a virtuous life.</li><li>Controlling emotions was essential.</li></ul>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 33,
+          "questionType": "note-completion",
+          "questionText": "Epictetus said that external events cannot be controlled but the ________ people make in response can be controlled.",
+          "options": [],
+          "correctAnswer": "choices",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 34,
+          "questionType": "note-completion",
+          "questionText": "A Stoic is someone who has a different view on experiences which others would consider as ________.",
+          "options": [],
+          "correctAnswer": "negative",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>The influence of Stoicism</strong>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 35,
+          "questionType": "note-completion",
+          "questionText": "George Washington organised a ________ about Cato to motivate his men.",
+          "options": [],
+          "correctAnswer": "play",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<ul style='margin:4px 0;'><li>The French artist Delacroix was a Stoic.</li></ul>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 36,
+          "questionType": "note-completion",
+          "questionText": "Adam Smith's ideas on ________ were influenced by Stoicism.",
+          "options": [],
+          "correctAnswer": "capitalism",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<ul style='margin:4px 0;'><li>Some of today's political leaders are inspired by the Stoics.</li><li>Cognitive Behaviour Therapy (CBT)</li></ul>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 37,
+          "questionType": "note-completion",
+          "questionText": "– the treatment for ________ is based on ideas from Stoicism",
+          "options": [],
+          "correctAnswer": "depression",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 38,
+          "questionType": "note-completion",
+          "questionText": "– people learn to base their thinking on ________.",
+          "options": [],
+          "correctAnswer": "logic",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 39,
+          "questionType": "note-completion",
+          "questionText": "In business, people benefit from Stoicism by identifying obstacles as ________.",
+          "options": [],
+          "correctAnswer": "opportunity",
+          "acceptableAnswers": [],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<strong>Relevance of Stoicism</strong>"
+        },
+        {
+          "blockType": "question",
+          "questionNumber": 40,
+          "questionType": "note-completion",
+          "questionText": "It requires a lot of ________ but Stoicism can help people to lead a good life.",
+          "options": [],
+          "correctAnswer": "practice",
+          "acceptableAnswers": [
+            "practise",
+            "practice"
+          ],
+          "marks": 1
+        },
+        {
+          "blockType": "instruction",
+          "content": "<ul style='margin:4px 0;'><li>It teaches people that having a strong character is more important than anything else.</li></ul>"
+        }
+      ]
+    }
+  ]
+}

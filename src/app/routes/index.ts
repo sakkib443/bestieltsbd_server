@@ -1,0 +1,64 @@
+import { Router } from "express";
+import { AuthRoutes } from "../modules/auth/auth.route";
+import { ExamRoutes } from "../modules/exam/exam.route";
+import { ExamSessionRoutes } from "../modules/examSession/examSession.route";
+import { StudentRoutes } from "../modules/student/student.route";
+import { UploadRoutes } from "../modules/upload/upload.route";
+import { UserRoutes } from "../modules/user/user.route";
+
+// Separate modules for each exam type
+import { ListeningRoutes } from "../modules/listening/listening.route";
+import { ReadingRoutes } from "../modules/reading/reading.route";
+import { WritingRoutes } from "../modules/writing/writing.route";
+import { SpeakingRoutes } from "../modules/speaking/speaking.route";
+
+const router = Router();
+
+const moduleRoutes = [
+    {
+        path: "/auth",
+        route: AuthRoutes,
+    },
+    {
+        path: "/exams",
+        route: ExamRoutes,
+    },
+    {
+        path: "/exam-sessions",
+        route: ExamSessionRoutes,
+    },
+    {
+        path: "/students",
+        route: StudentRoutes,
+    },
+    {
+        path: "/upload",
+        route: UploadRoutes,
+    },
+    // New separate modules for each exam type
+    {
+        path: "/listening",
+        route: ListeningRoutes,
+    },
+    {
+        path: "/reading",
+        route: ReadingRoutes,
+    },
+    {
+        path: "/writing",
+        route: WritingRoutes,
+    },
+    {
+        path: "/speaking",
+        route: SpeakingRoutes,
+    },
+    {
+        path: "/users",
+        route: UserRoutes,
+    },
+];
+
+moduleRoutes.forEach((route) => router.use(route.path, route.route));
+
+export default router;
+
