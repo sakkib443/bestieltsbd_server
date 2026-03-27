@@ -176,6 +176,14 @@ const deleteCoupon = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const getAllPurchases = catchAsync(async (req: Request, res: Response) => {
+    const result = await MockPackageService.getAllPurchases();
+    res.json({
+        success: true,
+        data: result,
+    });
+});
+
 export const MockPackageController = {
     createPackage,
     getAllPackages,
@@ -186,6 +194,7 @@ export const MockPackageController = {
     claimFreeMock,
     purchaseMock,
     getMyPurchases,
+    getAllPurchases,
     checkFreeMockStatus,
     getPaymentHistory,
     getAnalytics,

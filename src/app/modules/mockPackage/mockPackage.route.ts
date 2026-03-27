@@ -30,6 +30,9 @@ router.post("/packages", auth, authorize("admin"), MockPackageController.createP
 router.patch("/packages/:id", auth, authorize("admin"), MockPackageController.updatePackage);
 router.delete("/packages/:id", auth, authorize("admin"), MockPackageController.deletePackage);
 
+// All purchases (for Reports page)
+router.get("/purchases/all", auth, authorize("admin"), MockPackageController.getAllPurchases);
+
 // Analytics
 router.get("/analytics", auth, authorize("admin"), MockPackageController.getAnalytics);
 

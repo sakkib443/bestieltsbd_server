@@ -480,6 +480,17 @@ const deleteCoupon = async (id: string) => {
     return await Coupon.findByIdAndDelete(id);
 };
 
+// Get ALL purchases (admin — for Reports page)
+const getAllPurchases = async () => {
+    const purchases = await Purchase.find()
+        .populate("userId", "name email phone")
+        .populate("packageId", "title price isFree")
+        .populate("paymentId", "amount method transactionId")
+        .sort({ purchasedAt: -1 });
+    return purchases;
+};
+
+
 export const MockPackageService = {
     // Packages
     createPackage,
@@ -491,6 +502,7 @@ export const MockPackageService = {
     claimFreeMock,
     purchaseMock,
     getMyPurchases,
+    getAllPurchases,
     hasUsedFreeMock,
     getFreePackage,
     // Payments
