@@ -100,13 +100,16 @@ const updateStudentSchema = z.object({
 });
 
 // Verify exam ID validation
+// Accepts: BACIELTS260001 (admin-created, 6 digits) OR BESTIELTS26030001 (purchase-generated, 8 digits)
 const verifyExamIdSchema = z.object({
     body: z.object({
         examId: z
             .string({ message: "Exam ID is required" })
+            .min(10, "Exam ID too short")
+            .max(30, "Exam ID too long")
             .regex(
-                /^BACIELTS\d{6}$/,
-                "Invalid Exam ID format (e.g., BACIELTS260001)"
+                /^[A-Z]{2,12}\d{4,12}$/,
+                "Invalid Exam ID format"
             ),
     }),
 });
@@ -116,7 +119,9 @@ const startExamSchema = z.object({
     body: z.object({
         examId: z
             .string({ message: "Exam ID is required" })
-            .regex(/^BACIELTS\d{6}$/, "Invalid Exam ID format"),
+            .min(10, "Exam ID too short")
+            .max(30, "Exam ID too long")
+            .regex(/^[A-Z]{2,12}\d{4,12}$/, "Invalid Exam ID format"),
         ipAddress: z.string().optional(),
         browserFingerprint: z.string().optional(),
     }),
