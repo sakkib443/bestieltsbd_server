@@ -67,7 +67,7 @@ const claimFreeMock = catchAsync(async (req: Request, res: Response) => {
 });
 
 const purchaseMock = catchAsync(async (req: Request, res: Response) => {
-    const { packageId, paymentMethod, transactionId, couponCode } = req.body;
+    const { packageId, paymentMethod, transactionId, couponCode, bundleSize, customPrice } = req.body;
 
     if (!packageId || !paymentMethod || !transactionId) {
         return res.status(400).json({
@@ -81,7 +81,9 @@ const purchaseMock = catchAsync(async (req: Request, res: Response) => {
         packageId,
         paymentMethod,
         transactionId,
-        couponCode
+        couponCode,
+        bundleSize,
+        customPrice
     );
 
     res.status(201).json({

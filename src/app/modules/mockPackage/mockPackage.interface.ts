@@ -12,6 +12,14 @@ export interface IMockPackage {
         readingSetNumber: number;
         writingSetNumber: number;
     };
+    bundleSize: number; // 1 = single, 3 = 3-pack, 5 = 5-pack
+    bundleExamSets?: Array<{
+        listeningSetNumber: number;
+        readingSetNumber: number;
+        writingSetNumber: number;
+    }>;
+    badge?: string; // e.g. "FREE", "POPULAR", "BEST VALUE"
+    features?: string[]; // Feature list for display
     isFree: boolean;
     isActive: boolean;
     totalPurchases: number;

@@ -30,6 +30,21 @@ const mockPackageSchema = new Schema<IMockPackage>(
             readingSetNumber: { type: Number, required: true },
             writingSetNumber: { type: Number, required: true },
         },
+        bundleSize: {
+            type: Number,
+            default: 1,
+            min: 1,
+        },
+        bundleExamSets: [{
+            listeningSetNumber: { type: Number },
+            readingSetNumber: { type: Number },
+            writingSetNumber: { type: Number },
+        }],
+        badge: {
+            type: String,
+            trim: true,
+        },
+        features: [String],
         isFree: {
             type: Boolean,
             default: false,
