@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-// Generate IELTS Exam ID format: BACIELTS250001
-// BAC = BdCalling Academy, IELTS, YY = Year, NNNNN = Sequential number
+// Generate IELTS Exam ID format: BIBIELTS250001
+// BIB = Best IELTS BD, IELTS, YY = Year, NNNNN = Sequential number
 export const generateExamId = async (): Promise<string> => {
     const year = new Date().getFullYear().toString().slice(-2); // "25" for 2025
-    const prefix = `BACIELTS${year}`;
+    const prefix = `BIBIELTS${year}`;
 
     // Get the count of existing exams to generate sequential number
     const ExamSession = mongoose.model("ExamSession");

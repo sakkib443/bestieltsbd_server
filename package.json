@@ -1,7 +1,7 @@
 {
   "name": "ielts-backend",
   "version": "1.0.0",
-  "description": "IELTS Exam Backend API",
+  "description": "Best IELTS BD Backend API",
   "main": "src/server.ts",
   "scripts": {
     "start": "node ./dist/server.js",

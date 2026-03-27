@@ -27,7 +27,7 @@ app.use("/api", router);
 app.get("/", (req: Request, res: Response) => {
   res.json({
     success: true,
-    message: "BdCalling Academy IELTS API is running!",
+    message: "Best IELTS BD API is running!",
     version: "1.0.0",
   });
 });

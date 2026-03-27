@@ -36,7 +36,7 @@ const getStudentRegistrationTemplate = (data: {
                     <!-- Header -->
                     <tr>
                         <td style="background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%); padding: 40px 30px; text-align: center;">
-                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">🎓 BdCalling Academy</h1>
+                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">🎓 Best IELTS BD</h1>
                             <p style="color: #cffafe; margin: 10px 0 0 0; font-size: 16px;">IELTS Exam Portal</p>
                         </td>
                     </tr>
@@ -111,10 +111,10 @@ const getStudentRegistrationTemplate = (data: {
                     <tr>
                         <td style="background-color: #1f2937; padding: 25px 30px; text-align: center;">
                             <p style="color: #9ca3af; margin: 0; font-size: 14px;">
-                                © ${new Date().getFullYear()} BdCalling Academy. All rights reserved.
+                                © ${new Date().getFullYear()} Best IELTS BD. All rights reserved.
                             </p>
                             <p style="color: #6b7280; margin: 10px 0 0 0; font-size: 12px;">
-                                For any queries, contact us at: support@bdcalling.com
+                                For any queries, contact us at: support@bestieltsbd.com
                             </p>
                         </td>
                     </tr>
@@ -161,7 +161,7 @@ const getResultPublishedTemplate = (data: {
                     <tr>
                         <td style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 40px 30px; text-align: center;">
                             <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">🎉 Your Results Are Ready!</h1>
-                            <p style="color: #d1fae5; margin: 10px 0 0 0; font-size: 16px;">BdCalling Academy IELTS</p>
+                            <p style="color: #d1fae5; margin: 10px 0 0 0; font-size: 16px;">Best IELTS BD</p>
                         </td>
                     </tr>
                     
@@ -235,7 +235,7 @@ const getResultPublishedTemplate = (data: {
                                 <tr>
                                     <td style="padding: 20px; text-align: center;">
                                         <p style="color: #4b5563; margin: 0; font-size: 15px; line-height: 1.6;">
-                                            Thank you for choosing BdCalling Academy for your IELTS preparation.<br>
+                                            Thank you for choosing Best IELTS BD for your IELTS preparation.<br>
                                             We wish you all the best in your future endeavors! 🌟
                                         </p>
                                     </td>
@@ -248,10 +248,10 @@ const getResultPublishedTemplate = (data: {
                     <tr>
                         <td style="background-color: #1f2937; padding: 25px 30px; text-align: center;">
                             <p style="color: #9ca3af; margin: 0; font-size: 14px;">
-                                © ${new Date().getFullYear()} BdCalling Academy. All rights reserved.
+                                © ${new Date().getFullYear()} Best IELTS BD. All rights reserved.
                             </p>
                             <p style="color: #6b7280; margin: 10px 0 0 0; font-size: 12px;">
-                                For any queries, contact us at: support@bdcalling.com
+                                For any queries, contact us at: support@bestieltsbd.com
                             </p>
                         </td>
                     </tr>
@@ -274,10 +274,10 @@ export const sendStudentRegistrationEmail = async (data: {
 }) => {
     try {
         const transporter = createTransporter();
-        const loginUrl = process.env.FRONTEND_URL || "https://ielts.bdcalling.com";
+        const loginUrl = process.env.FRONTEND_URL || "https://bestieltsbd.com";
 
         const mailOptions = {
-            from: `"BdCalling Academy IELTS" <${process.env.EMAIL_USER}>`,
+            from: `"Best IELTS BD" <${process.env.EMAIL_USER}>`,
             to: data.email,
             subject: `🎓 IELTS Exam Registration Successful - ${data.examId}`,
             html: getStudentRegistrationTemplate({
@@ -317,10 +317,10 @@ export const sendResultPublishedEmail = async (data: {
 }) => {
     try {
         const transporter = createTransporter();
-        const resultUrl = process.env.FRONTEND_URL || "https://ielts.bdcalling.com";
+        const resultUrl = process.env.FRONTEND_URL || "https://bestieltsbd.com";
 
         const mailOptions = {
-            from: `"BdCalling Academy IELTS" <${process.env.EMAIL_USER}>`,
+            from: `"Best IELTS BD" <${process.env.EMAIL_USER}>`,
             to: data.email,
             subject: `🏆 Your IELTS Result is Ready - Overall Band ${data.overallBand}`,
             html: getResultPublishedTemplate({
