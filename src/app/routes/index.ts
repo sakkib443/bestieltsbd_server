@@ -12,6 +12,7 @@ import { ListeningRoutes } from "../modules/listening/listening.route";
 import { ReadingRoutes } from "../modules/reading/reading.route";
 import { WritingRoutes } from "../modules/writing/writing.route";
 import { SpeakingRoutes } from "../modules/speaking/speaking.route";
+import { SpeakingSessionRoutes } from "../modules/speakingSession/speakingSession.route";
 
 const router = Router();
 
@@ -52,6 +53,10 @@ const moduleRoutes = [
     {
         path: "/speaking",
         route: SpeakingRoutes,
+    },
+    {
+        path: "/speaking-sessions",
+        route: SpeakingSessionRoutes,
     },
     {
         path: "/users",
