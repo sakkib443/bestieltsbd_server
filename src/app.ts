@@ -21,7 +21,7 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
 });
 
 // API routes
-app.use("/api", router);
+app.use("/api/v1", router);
 
 // Health check route
 app.get("/", (req: Request, res: Response) => {
