@@ -4,7 +4,7 @@ import crypto from "crypto";
 import { User } from "../user/user.model";
 import { IUser, ILoginCredentials } from "../user/user.interface";
 import config from "../../config";
-import { sendPasswordResetEmail } from "../../utils/email.service";
+import { sendPasswordResetEmail, sendWelcomeEmail } from "../../utils/email.service";
 
 // In-memory OTP store: email → { otp, expiresAt, resetToken? }
 const otpStore = new Map<string, { otp: string; expiresAt: number; resetToken?: string }>();
@@ -22,6 +22,9 @@ const register = async (userData: IUser) => {
 
     const user = await User.create(userData);
 
+    // Send welcome email (non-blocking)
+    sendWelcomeEmail({ name: user.name, email: user.email }).catch(() => {});
+
     const token = jwt.sign(
         { id: user._id, email: user.email, role: user.role },
         config.jwt_secret as jwt.Secret,
@@ -33,6 +36,7 @@ const register = async (userData: IUser) => {
         token,
     };
 };
+
 
 const login = async (credentials: ILoginCredentials) => {
     const { email, password } = credentials;
@@ -72,7 +76,7 @@ const googleLogin = async (googleData: {
             googleId: googleData.googleId,
             picture: googleData.picture || "",
             password: await bcrypt.hash(googleData.googleId + Date.now().toString(), 10),
-            role: "student",
+            role: "user",
             authProvider: "google",
         });
     } else {

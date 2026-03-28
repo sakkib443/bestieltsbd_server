@@ -1,17 +1,181 @@
 import nodemailer from "nodemailer";
 
-// Create transporter using Gmail SMTP
 const createTransporter = () => {
     return nodemailer.createTransport({
         service: "gmail",
         auth: {
             user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS, // Use App Password for Gmail
+            pass: process.env.EMAIL_PASS,
         },
     });
 };
 
-// Email templates with beautiful formatting
+// ── Shared layout wrapper ────────────────────────────────────────────────────
+const emailWrapper = (content: string) => `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+<body style="margin:0;padding:0;background:#F0F2F5;font-family:'Segoe UI',Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F0F2F5;padding:40px 16px;">
+    <tr><td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.10);">
+
+        <!-- TOP BRAND BAR -->
+        <tr>
+          <td style="background:linear-gradient(135deg,#C4122F 0%,#9B0E24 100%);padding:0 0 0 0;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding:32px 40px 28px 40px;">
+                  <table cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="background:rgba(255,255,255,0.15);border-radius:12px;padding:10px 16px;">
+                        <span style="color:#fff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">🎓 Best IELTS BD</span>
+                      </td>
+                    </tr>
+                  </table>
+                  <p style="color:rgba(255,255,255,0.75);font-size:13px;margin:10px 0 0 4px;letter-spacing:0.5px;">OFFICIAL COMMUNICATION · bestieltsbd.vercel.app</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- CONTENT -->
+        ${content}
+
+        <!-- FOOTER -->
+        <tr>
+          <td style="background:#1A1D23;padding:32px 40px;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td>
+                  <p style="color:#6B7280;font-size:13px;margin:0 0 8px 0;">
+                    🎓 <strong style="color:#9CA3AF;">Best IELTS BD</strong> · World-Class IELTS Preparation
+                  </p>
+                  <p style="color:#4B5563;font-size:12px;margin:0 0 4px 0;">📧 support@bestieltsbd.com &nbsp;|&nbsp; 🌐 bestieltsbd.vercel.app</p>
+                  <p style="color:#374151;font-size:11px;margin:16px 0 0 0;border-top:1px solid #2D3139;padding-top:14px;">
+                    © ${new Date().getFullYear()} Best IELTS BD. All rights reserved. &nbsp;·&nbsp;
+                    <span style="color:#C4122F;">Do not reply to this email.</span>
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>
+`;
+
+// ── Template 1: Welcome Email (on registration) ──────────────────────────────
+const getWelcomeTemplate = (data: {
+    name: string;
+    email: string;
+    loginUrl: string;
+}) => emailWrapper(`
+  <!-- HERO -->
+  <tr>
+    <td style="background:linear-gradient(180deg,#FFF5F7 0%,#ffffff 100%);padding:48px 40px 32px 40px;text-align:center;border-bottom:1px solid #FDE8EC;">
+      <div style="width:72px;height:72px;background:linear-gradient(135deg,#C4122F,#9B0E24);border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:32px;line-height:72px;">🎓</div>
+      <h1 style="color:#111827;font-size:28px;font-weight:800;margin:0 0 10px 0;line-height:1.2;">Welcome to Best IELTS BD!</h1>
+      <p style="color:#6B7280;font-size:15px;margin:0;line-height:1.6;">Your account has been created successfully.</p>
+    </td>
+  </tr>
+
+  <!-- GREETING -->
+  <tr>
+    <td style="padding:36px 40px 24px 40px;">
+      <p style="color:#374151;font-size:16px;line-height:1.7;margin:0 0 16px 0;">
+        Hi <strong style="color:#C4122F;">${data.name}</strong>, 👋
+      </p>
+      <p style="color:#4B5563;font-size:15px;line-height:1.7;margin:0 0 24px 0;">
+        We're thrilled to have you on board! You now have access to Bangladesh's most advanced AI-powered IELTS mock test platform. Start your journey towards your target band score today.
+      </p>
+
+      <!-- Account info box -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFB;border:1.5px solid #E5E7EB;border-radius:14px;margin-bottom:28px;">
+        <tr>
+          <td style="padding:24px 28px;">
+            <p style="color:#6B7280;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin:0 0 16px 0;">Your Account</p>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding:8px 0;border-bottom:1px solid #F3F4F6;">
+                  <span style="color:#9CA3AF;font-size:13px;">Registered Email</span>
+                </td>
+                <td style="padding:8px 0;border-bottom:1px solid #F3F4F6;text-align:right;">
+                  <span style="color:#111827;font-size:13px;font-weight:600;">${data.email}</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0;">
+                  <span style="color:#9CA3AF;font-size:13px;">Account Type</span>
+                </td>
+                <td style="padding:8px 0;text-align:right;">
+                  <span style="background:#FDE8EC;color:#C4122F;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;">Student</span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <!-- What's next -->
+      <p style="color:#374151;font-size:14px;font-weight:700;margin:0 0 14px 0;text-transform:uppercase;letter-spacing:0.5px;">What you can do now:</p>
+      <table width="100%" cellpadding="0" cellspacing="0">
+        ${[
+            ["🛒", "Browse & buy IELTS mock test packages"],
+            ["🎧", "Practice Listening, Reading & Writing"],
+            ["🎤", "Take AI-graded Speaking tests"],
+            ["📊", "Track your band score progress"],
+        ].map(([icon, text]) => `
+        <tr>
+          <td style="padding:7px 0;">
+            <table cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="width:28px;font-size:18px;vertical-align:top;">${icon}</td>
+                <td style="color:#4B5563;font-size:14px;line-height:1.5;padding-left:6px;">${text}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>`).join("")}
+      </table>
+    </td>
+  </tr>
+
+  <!-- CTA BUTTON -->
+  <tr>
+    <td style="padding:8px 40px 40px 40px;text-align:center;">
+      <a href="${data.loginUrl}" style="display:inline-block;background:linear-gradient(135deg,#C4122F,#9B0E24);color:#ffffff;text-decoration:none;padding:16px 48px;border-radius:10px;font-size:16px;font-weight:700;letter-spacing:0.3px;box-shadow:0 6px 20px rgba(196,18,47,0.35);">
+        🚀 &nbsp;Go to Dashboard
+      </a>
+      <p style="color:#9CA3AF;font-size:12px;margin:16px 0 0 0;">Button not working? <a href="${data.loginUrl}" style="color:#C4122F;">${data.loginUrl}</a></p>
+    </td>
+  </tr>
+
+  <!-- SECURITY NOTE -->
+  <tr>
+    <td style="padding:0 40px 36px 40px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;">
+        <tr>
+          <td style="padding:16px 20px;">
+            <p style="color:#92400E;font-size:13px;margin:0;line-height:1.6;">
+              ⚠️ <strong>Security Tip:</strong> Best IELTS BD will never ask for your password via email or phone. If you did not create this account, please ignore this email.
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+`);
+
+// ── Template 2: IELTS Exam Registration (admin-created student) ──────────────
 const getStudentRegistrationTemplate = (data: {
     studentName: string;
     examId: string;
@@ -19,114 +183,104 @@ const getStudentRegistrationTemplate = (data: {
     password: string;
     examDate: string;
     loginUrl: string;
-}) => {
-    return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IELTS Exam Registration</title>
-</head>
-<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 40px 0;">
-        <tr>
-            <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
-                    <!-- Header -->
-                    <tr>
-                        <td style="background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%); padding: 40px 30px; text-align: center;">
-                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">🎓 Best IELTS BD</h1>
-                            <p style="color: #cffafe; margin: 10px 0 0 0; font-size: 16px;">IELTS Exam Portal</p>
-                        </td>
-                    </tr>
-                    
-                    <!-- Welcome Message -->
-                    <tr>
-                        <td style="padding: 40px 30px 20px 30px;">
-                            <h2 style="color: #1f2937; margin: 0 0 20px 0; font-size: 24px;">Welcome, ${data.studentName}! 🎉</h2>
-                            <p style="color: #4b5563; font-size: 16px; line-height: 1.6; margin: 0;">
-                                Congratulations! Your IELTS exam registration has been successfully completed. Below are your login credentials:
-                            </p>
-                        </td>
-                    </tr>
-                    
-                    <!-- Credentials Box -->
-                    <tr>
-                        <td style="padding: 0 30px;">
-                            <table width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%); border-radius: 12px; border: 2px solid #0891b2;">
-                                <tr>
-                                    <td style="padding: 25px;">
-                                        <h3 style="color: #0e7490; margin: 0 0 20px 0; font-size: 18px; border-bottom: 2px solid #0891b2; padding-bottom: 10px;">📋 Your Login Credentials</h3>
-                                        
-                                        <table width="100%" cellpadding="8" cellspacing="0">
-                                            <tr>
-                                                <td style="color: #1f2937; font-weight: 600; width: 120px;">Exam ID:</td>
-                                                <td style="color: #0891b2; font-size: 18px; font-weight: 700; font-family: 'Courier New', monospace; background: #ffffff; padding: 8px 12px; border-radius: 6px;">${data.examId}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="color: #1f2937; font-weight: 600;">Email:</td>
-                                                <td style="color: #4b5563;">${data.email}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="color: #1f2937; font-weight: 600;">Password:</td>
-                                                <td style="color: #0891b2; font-weight: 700; font-family: 'Courier New', monospace; background: #ffffff; padding: 8px 12px; border-radius: 6px;">${data.password}</td>
-                                            </tr>
-                                            <tr>
-                                                <td style="color: #1f2937; font-weight: 600;">Exam Date:</td>
-                                                <td style="color: #dc2626; font-weight: 700;">${data.examDate}</td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    
-                    <!-- Login Button -->
-                    <tr>
-                        <td style="padding: 30px; text-align: center;">
-                            <a href="${data.loginUrl}" style="display: inline-block; background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(8, 145, 178, 0.4);">
-                                🚀 Login Now
-                            </a>
-                        </td>
-                    </tr>
-                    
-                    <!-- Important Notice -->
-                    <tr>
-                        <td style="padding: 0 30px 30px 30px;">
-                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
-                                <tr>
-                                    <td style="padding: 15px;">
-                                        <p style="color: #92400e; margin: 0; font-size: 14px;">
-                                            ⚠️ <strong>Important:</strong> Please do not share your password with anyone. During the exam, do not exit full-screen mode as it may result in disqualification.
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    
-                    <!-- Footer -->
-                    <tr>
-                        <td style="background-color: #1f2937; padding: 25px 30px; text-align: center;">
-                            <p style="color: #9ca3af; margin: 0; font-size: 14px;">
-                                © ${new Date().getFullYear()} Best IELTS BD. All rights reserved.
-                            </p>
-                            <p style="color: #6b7280; margin: 10px 0 0 0; font-size: 12px;">
-                                For any queries, contact us at: support@bestieltsbd.com
-                            </p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</body>
-</html>
-    `;
-};
+}) => emailWrapper(`
+  <!-- HERO -->
+  <tr>
+    <td style="background:linear-gradient(180deg,#FFF5F7 0%,#ffffff 100%);padding:48px 40px 32px 40px;text-align:center;border-bottom:1px solid #FDE8EC;">
+      <div style="font-size:52px;margin-bottom:16px;">🎓</div>
+      <h1 style="color:#111827;font-size:26px;font-weight:800;margin:0 0 8px 0;">IELTS Exam Registration</h1>
+      <p style="color:#6B7280;font-size:14px;margin:0;">You are now registered for your upcoming IELTS Mock Test.</p>
+    </td>
+  </tr>
 
+  <!-- BODY -->
+  <tr>
+    <td style="padding:36px 40px 24px 40px;">
+      <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 28px 0;">
+        Dear <strong style="color:#C4122F;">${data.studentName}</strong>, your IELTS mock test registration is confirmed. Please save your login credentials below — you will need them on exam day.
+      </p>
+
+      <!-- Credentials Card -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#FFF5F7 0%,#FDE8EC 100%);border:2px solid #C4122F;border-radius:16px;margin-bottom:28px;">
+        <tr>
+          <td style="padding:28px 32px;">
+            <p style="color:#9B0E24;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 20px 0;border-bottom:1px solid rgba(196,18,47,0.15);padding-bottom:14px;">🔐 Your Login Credentials</p>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding:10px 0;border-bottom:1px solid rgba(196,18,47,0.08);width:120px;">
+                  <span style="color:#6B7280;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Exam ID</span>
+                </td>
+                <td style="padding:10px 0;border-bottom:1px solid rgba(196,18,47,0.08);text-align:right;">
+                  <code style="background:#ffffff;color:#C4122F;font-size:18px;font-weight:800;padding:4px 14px;border-radius:8px;border:1px solid #FDE8EC;letter-spacing:1px;">${data.examId}</code>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:10px 0;border-bottom:1px solid rgba(196,18,47,0.08);">
+                  <span style="color:#6B7280;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Email</span>
+                </td>
+                <td style="padding:10px 0;border-bottom:1px solid rgba(196,18,47,0.08);text-align:right;">
+                  <span style="color:#374151;font-size:14px;font-weight:600;">${data.email}</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:10px 0;border-bottom:1px solid rgba(196,18,47,0.08);">
+                  <span style="color:#6B7280;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Password</span>
+                </td>
+                <td style="padding:10px 0;border-bottom:1px solid rgba(196,18,47,0.08);text-align:right;">
+                  <code style="background:#ffffff;color:#374151;font-size:14px;font-weight:700;padding:4px 14px;border-radius:8px;border:1px solid #E5E7EB;">${data.password}</code>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:10px 0;">
+                  <span style="color:#6B7280;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Exam Date</span>
+                </td>
+                <td style="padding:10px 0;text-align:right;">
+                  <span style="background:#EF4444;color:#ffffff;font-size:13px;font-weight:700;padding:4px 14px;border-radius:8px;">📅 ${data.examDate}</span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Tips -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#F0FDF4;border:1px solid #86EFAC;border-radius:12px;margin-bottom:24px;">
+        <tr>
+          <td style="padding:20px 24px;">
+            <p style="color:#166534;font-size:14px;font-weight:700;margin:0 0 10px 0;">📋 Before Your Exam:</p>
+            <ul style="color:#166534;font-size:13px;margin:0;padding-left:18px;line-height:1.8;">
+              <li>Use a stable internet connection and a laptop/desktop</li>
+              <li>The exam runs in fullscreen mode — do not exit during the test</li>
+              <li>Keep your Exam ID handy — you'll need it to start</li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- CTA -->
+  <tr>
+    <td style="padding:0 40px 40px 40px;text-align:center;">
+      <a href="${data.loginUrl}" style="display:inline-block;background:linear-gradient(135deg,#C4122F,#9B0E24);color:#ffffff;text-decoration:none;padding:16px 48px;border-radius:10px;font-size:16px;font-weight:700;box-shadow:0 6px 20px rgba(196,18,47,0.35);">
+        🚀 &nbsp;Login to Exam Portal
+      </a>
+    </td>
+  </tr>
+
+  <!-- WARNING -->
+  <tr>
+    <td style="padding:0 40px 36px 40px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;">
+        <tr><td style="padding:16px 20px;">
+          <p style="color:#92400E;font-size:13px;margin:0;line-height:1.6;">⚠️ <strong>Important:</strong> Do not share your login credentials with anyone. During the exam, switching tabs or exiting fullscreen may result in automatic termination.</p>
+        </td></tr>
+      </table>
+    </td>
+  </tr>
+`);
+
+// ── Template 3: Result Published ─────────────────────────────────────────────
 const getResultPublishedTemplate = (data: {
     studentName: string;
     examId: string;
@@ -138,133 +292,157 @@ const getResultPublishedTemplate = (data: {
     examDate: string;
     resultUrl: string;
 }) => {
-    const getBandColor = (band: number) => {
-        if (band >= 7) return "#059669"; // Green
-        if (band >= 5) return "#0891b2"; // Cyan
-        return "#dc2626"; // Red
-    };
+    const bandColor = (b: number) => b >= 7 ? "#059669" : b >= 5 ? "#0891b2" : "#DC2626";
+    const bandLabel = (b: number) => b >= 7 ? "Excellent" : b >= 5 ? "Good" : "Needs Work";
 
-    return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IELTS Result Published</title>
-</head>
-<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 40px 0;">
+    return emailWrapper(`
+  <!-- HERO -->
+  <tr>
+    <td style="background:linear-gradient(135deg,#ECFDF5 0%,#D1FAE5 100%);padding:48px 40px 36px 40px;text-align:center;border-bottom:1px solid #A7F3D0;">
+      <div style="font-size:56px;margin-bottom:12px;">🏆</div>
+      <h1 style="color:#065F46;font-size:26px;font-weight:800;margin:0 0 8px 0;">Your Results Are Ready!</h1>
+      <p style="color:#6EE7B7;font-size:14px;margin:0;">Best IELTS BD · ${data.examDate}</p>
+    </td>
+  </tr>
+
+  <!-- OVERALL SCORE -->
+  <tr>
+    <td style="padding:36px 40px 8px 40px;text-align:center;">
+      <p style="color:#374151;font-size:15px;margin:0 0 20px 0;">Congratulations, <strong style="color:#C4122F;">${data.studentName}</strong>! Here's how you performed:</p>
+      <table cellpadding="0" cellspacing="0" style="margin:0 auto;background:linear-gradient(135deg,${bandColor(data.overallBand)},${bandColor(data.overallBand)}AA);border-radius:100px;padding:28px 48px;box-shadow:0 12px 32px rgba(0,0,0,0.12);">
         <tr>
-            <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
-                    <!-- Header -->
-                    <tr>
-                        <td style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 40px 30px; text-align: center;">
-                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">🎉 Your Results Are Ready!</h1>
-                            <p style="color: #d1fae5; margin: 10px 0 0 0; font-size: 16px;">Best IELTS BD</p>
-                        </td>
-                    </tr>
-                    
-                    <!-- Congratulations Message -->
-                    <tr>
-                        <td style="padding: 40px 30px 20px 30px; text-align: center;">
-                            <h2 style="color: #1f2937; margin: 0 0 10px 0; font-size: 22px;">Congratulations, ${data.studentName}! 🏆</h2>
-                            <p style="color: #6b7280; font-size: 14px; margin: 0;">Exam ID: <strong>${data.examId}</strong> | Exam Date: <strong>${data.examDate}</strong></p>
-                        </td>
-                    </tr>
-                    
-                    <!-- Overall Band Score -->
-                    <tr>
-                        <td style="padding: 0 30px; text-align: center;">
-                            <table width="200" cellpadding="0" cellspacing="0" style="margin: 0 auto; background: linear-gradient(135deg, ${getBandColor(data.overallBand)} 0%, ${getBandColor(data.overallBand)}dd 100%); border-radius: 100px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
-                                <tr>
-                                    <td style="padding: 30px; text-align: center;">
-                                        <p style="color: rgba(255,255,255,0.9); margin: 0 0 5px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Overall Band</p>
-                                        <p style="color: #ffffff; margin: 0; font-size: 56px; font-weight: 800;">${data.overallBand}</p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    
-                    <!-- Module Scores -->
-                    <tr>
-                        <td style="padding: 30px;">
-                            <table width="100%" cellpadding="0" cellspacing="10">
-                                <tr>
-                                    <!-- Listening -->
-                                    <td width="50%" style="background-color: #f0f9ff; border-radius: 12px; text-align: center; padding: 20px 10px;">
-                                        <p style="color: #0369a1; margin: 0 0 5px 0; font-size: 12px; font-weight: 600;">🎧 LISTENING</p>
-                                        <p style="color: #0c4a6e; margin: 0; font-size: 32px; font-weight: 700;">${data.listeningBand}</p>
-                                    </td>
-                                    <!-- Reading -->
-                                    <td width="50%" style="background-color: #ecfdf5; border-radius: 12px; text-align: center; padding: 20px 10px;">
-                                        <p style="color: #047857; margin: 0 0 5px 0; font-size: 12px; font-weight: 600;">📖 READING</p>
-                                        <p style="color: #064e3b; margin: 0; font-size: 32px; font-weight: 700;">${data.readingBand}</p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <!-- Writing -->
-                                    <td width="50%" style="background-color: #fef3c7; border-radius: 12px; text-align: center; padding: 20px 10px;">
-                                        <p style="color: #b45309; margin: 0 0 5px 0; font-size: 12px; font-weight: 600;">✍️ WRITING</p>
-                                        <p style="color: #78350f; margin: 0; font-size: 32px; font-weight: 700;">${data.writingBand}</p>
-                                    </td>
-                                    <!-- Speaking -->
-                                    <td width="50%" style="background-color: #fff7ed; border-radius: 12px; text-align: center; padding: 20px 10px;">
-                                        <p style="color: #c2410c; margin: 0 0 5px 0; font-size: 12px; font-weight: 600;">🎙️ SPEAKING</p>
-                                        <p style="color: #7c2d12; margin: 0; font-size: 32px; font-weight: 700;">${data.speakingBand}</p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    
-                    <!-- View Full Result Button -->
-                    <tr>
-                        <td style="padding: 10px 30px 30px 30px; text-align: center;">
-                            <a href="${data.resultUrl}" style="display: inline-block; background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 12px rgba(8, 145, 178, 0.4);">
-                                📊 View Detailed Results
-                            </a>
-                        </td>
-                    </tr>
-                    
-                    <!-- Thank You Message -->
-                    <tr>
-                        <td style="padding: 0 30px 30px 30px;">
-                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; border-radius: 8px;">
-                                <tr>
-                                    <td style="padding: 20px; text-align: center;">
-                                        <p style="color: #4b5563; margin: 0; font-size: 15px; line-height: 1.6;">
-                                            Thank you for choosing Best IELTS BD for your IELTS preparation.<br>
-                                            We wish you all the best in your future endeavors! 🌟
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    
-                    <!-- Footer -->
-                    <tr>
-                        <td style="background-color: #1f2937; padding: 25px 30px; text-align: center;">
-                            <p style="color: #9ca3af; margin: 0; font-size: 14px;">
-                                © ${new Date().getFullYear()} Best IELTS BD. All rights reserved.
-                            </p>
-                            <p style="color: #6b7280; margin: 10px 0 0 0; font-size: 12px;">
-                                For any queries, contact us at: support@bestieltsbd.com
-                            </p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
+          <td style="text-align:center;">
+            <p style="color:rgba(255,255,255,0.85);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin:0 0 4px 0;">Overall Band</p>
+            <p style="color:#ffffff;font-size:64px;font-weight:900;margin:0;line-height:1;">${data.overallBand}</p>
+            <p style="color:rgba(255,255,255,0.75);font-size:13px;font-weight:600;margin:4px 0 0 0;">${bandLabel(data.overallBand)}</p>
+          </td>
         </tr>
-    </table>
-</body>
-</html>
-    `;
+      </table>
+    </td>
+  </tr>
+
+  <!-- MODULE SCORES -->
+  <tr>
+    <td style="padding:28px 40px;">
+      <table width="100%" cellpadding="8" cellspacing="0">
+        <tr>
+          ${[
+              { label: "🎧 Listening", band: data.listeningBand, bg: "#EFF6FF", border: "#BFDBFE" },
+              { label: "📖 Reading",   band: data.readingBand,   bg: "#ECFDF5", border: "#A7F3D0" },
+              { label: "✍️ Writing",   band: data.writingBand,   bg: "#F5F3FF", border: "#DDD6FE" },
+              { label: "🎤 Speaking",  band: data.speakingBand,  bg: "#FFF7ED", border: "#FED7AA" },
+          ].map(m => `
+          <td width="25%" style="text-align:center;padding:0 6px;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:${m.bg};border:1.5px solid ${m.border};border-radius:14px;">
+              <tr><td style="padding:18px 8px;text-align:center;">
+                <p style="font-size:12px;font-weight:700;color:#4B5563;margin:0 0 8px 0;">${m.label}</p>
+                <p style="font-size:36px;font-weight:900;color:${bandColor(m.band)};margin:0;line-height:1;">${m.band || "—"}</p>
+              </td></tr>
+            </table>
+          </td>`).join("")}
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- CTA -->
+  <tr>
+    <td style="padding:8px 40px 40px 40px;text-align:center;">
+      <a href="${data.resultUrl}" style="display:inline-block;background:linear-gradient(135deg,#C4122F,#9B0E24);color:#ffffff;text-decoration:none;padding:16px 48px;border-radius:10px;font-size:16px;font-weight:700;box-shadow:0 6px 20px rgba(196,18,47,0.35);">
+        📊 &nbsp;View Full Report
+      </a>
+      <p style="color:#9CA3AF;font-size:12px;margin:16px 0 0 0;">Exam ID: <strong>${data.examId}</strong></p>
+    </td>
+  </tr>
+
+  <!-- ENCOURAGEMENT -->
+  <tr>
+    <td style="padding:0 40px 36px 40px;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFB;border:1px solid #E5E7EB;border-radius:12px;">
+        <tr><td style="padding:20px 24px;text-align:center;">
+          <p style="color:#4B5563;font-size:14px;line-height:1.7;margin:0;">
+            Thank you for choosing <strong>Best IELTS BD</strong> for your preparation. Keep practicing — your target band is within reach! 🌟
+          </p>
+        </td></tr>
+      </table>
+    </td>
+  </tr>
+`);
 };
 
-// Send student registration email
+// ── Template 4: Password Reset OTP ───────────────────────────────────────────
+const getPasswordResetTemplate = (data: {
+    name: string;
+    otp: string;
+    expiresInMinutes: number;
+}) => emailWrapper(`
+  <!-- HERO -->
+  <tr>
+    <td style="background:linear-gradient(180deg,#FFF5F7 0%,#ffffff 100%);padding:48px 40px 32px 40px;text-align:center;border-bottom:1px solid #FDE8EC;">
+      <div style="width:72px;height:72px;background:linear-gradient(135deg,#C4122F,#9B0E24);border-radius:50%;margin:0 auto 20px;font-size:32px;line-height:72px;text-align:center;">🔐</div>
+      <h1 style="color:#111827;font-size:24px;font-weight:800;margin:0 0 8px 0;">Password Reset Request</h1>
+      <p style="color:#6B7280;font-size:14px;margin:0;">Use the code below to reset your password.</p>
+    </td>
+  </tr>
+
+  <!-- BODY -->
+  <tr>
+    <td style="padding:36px 40px 24px 40px;">
+      <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 28px 0;">
+        Hi <strong style="color:#C4122F;">${data.name}</strong>, we received a request to reset your <strong>Best IELTS BD</strong> account password. Use the one-time code below:
+      </p>
+
+      <!-- OTP Box -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#FFF5F7 0%,#FDE8EC 100%);border:2px dashed #C4122F;border-radius:16px;margin-bottom:28px;">
+        <tr>
+          <td style="padding:32px;text-align:center;">
+            <p style="color:#9B0E24;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;margin:0 0 16px 0;">Your Verification Code</p>
+            <p style="color:#C4122F;font-size:52px;font-weight:900;letter-spacing:14px;margin:0;font-family:'Courier New',monospace;">${data.otp}</p>
+            <p style="color:#9CA3AF;font-size:12px;margin:14px 0 0 0;">⏱ Expires in <strong style="color:#C4122F;">${data.expiresInMinutes} minutes</strong></p>
+          </td>
+        </tr>
+      </table>
+
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#FEF2F2;border:1px solid #FECACA;border-radius:12px;">
+        <tr><td style="padding:18px 22px;">
+          <p style="color:#991B1B;font-size:13px;margin:0;line-height:1.6;">
+            🚫 <strong>Never share this code.</strong> Best IELTS BD staff will <em>never</em> ask for your OTP. If you didn't request this, you can safely ignore this email — your password won't change.
+          </p>
+        </td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <tr><td style="padding:0 40px 40px 40px;text-align:center;">
+    <p style="color:#9CA3AF;font-size:12px;margin:0;">This code is valid for ${data.expiresInMinutes} minutes only.</p>
+  </td></tr>
+`);
+
+// ── Exported send functions ────────────────────────────────────────────────────
+
+// Welcome email on self-registration
+export const sendWelcomeEmail = async (data: {
+    name: string;
+    email: string;
+}) => {
+    try {
+        const transporter = createTransporter();
+        const loginUrl = `${process.env.FRONTEND_URL || "https://bestieltsbd.vercel.app"}/login`;
+        await transporter.sendMail({
+            from: `"Best IELTS BD" <${process.env.EMAIL_USER}>`,
+            to: data.email,
+            subject: `👋 Welcome to Best IELTS BD, ${data.name}!`,
+            html: getWelcomeTemplate({ name: data.name, email: data.email, loginUrl }),
+        });
+        console.log("Welcome email sent:", data.email);
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to send welcome email:", error);
+        return { success: false, error };
+    }
+};
+
+// Admin-registered student exam credentials
 export const sendStudentRegistrationEmail = async (data: {
     studentName: string;
     examId: string;
@@ -274,36 +452,29 @@ export const sendStudentRegistrationEmail = async (data: {
 }) => {
     try {
         const transporter = createTransporter();
-        const loginUrl = process.env.FRONTEND_URL || "https://bestieltsbd.com";
-
-        const mailOptions = {
+        const loginUrl = `${process.env.FRONTEND_URL || "https://bestieltsbd.vercel.app"}/login`;
+        await transporter.sendMail({
             from: `"Best IELTS BD" <${process.env.EMAIL_USER}>`,
             to: data.email,
-            subject: `🎓 IELTS Exam Registration Successful - ${data.examId}`,
+            subject: `🎓 IELTS Exam Registration Confirmed — ${data.examId}`,
             html: getStudentRegistrationTemplate({
                 studentName: data.studentName,
                 examId: data.examId,
                 email: data.email,
                 password: data.password,
-                examDate: new Date(data.examDate).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                }),
-                loginUrl: `${loginUrl}/login`,
+                examDate: new Date(data.examDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+                loginUrl: `${loginUrl}`,
             }),
-        };
-
-        const result = await transporter.sendMail(mailOptions);
-        console.log("Registration email sent successfully:", result.messageId);
-        return { success: true, messageId: result.messageId };
+        });
+        console.log("Registration email sent:", data.email);
+        return { success: true };
     } catch (error) {
         console.error("Failed to send registration email:", error);
         return { success: false, error };
     }
 };
 
-// Send result published email
+// Result published
 export const sendResultPublishedEmail = async (data: {
     studentName: string;
     examId: string;
@@ -317,12 +488,11 @@ export const sendResultPublishedEmail = async (data: {
 }) => {
     try {
         const transporter = createTransporter();
-        const resultUrl = process.env.FRONTEND_URL || "https://bestieltsbd.com";
-
-        const mailOptions = {
+        const resultUrl = `${process.env.FRONTEND_URL || "https://bestieltsbd.vercel.app"}/dashboard/student/results`;
+        await transporter.sendMail({
             from: `"Best IELTS BD" <${process.env.EMAIL_USER}>`,
             to: data.email,
-            subject: `🏆 Your IELTS Result is Ready - Overall Band ${data.overallBand}`,
+            subject: `🏆 Your IELTS Result is Ready! — Overall Band ${data.overallBand}`,
             html: getResultPublishedTemplate({
                 studentName: data.studentName,
                 examId: data.examId,
@@ -331,25 +501,19 @@ export const sendResultPublishedEmail = async (data: {
                 writingBand: data.writingBand,
                 speakingBand: data.speakingBand,
                 overallBand: data.overallBand,
-                examDate: new Date(data.examDate).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                }),
-                resultUrl: `${resultUrl}/result/${data.examId}`,
+                examDate: new Date(data.examDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+                resultUrl,
             }),
-        };
-
-        const result = await transporter.sendMail(mailOptions);
-        console.log("Result email sent successfully:", result.messageId);
-        return { success: true, messageId: result.messageId };
+        });
+        console.log("Result email sent:", data.email);
+        return { success: true };
     } catch (error) {
         console.error("Failed to send result email:", error);
         return { success: false, error };
     }
 };
 
-// ── Password Reset OTP Email ─────────────────────────────────────────────────
+// Password reset OTP
 export const sendPasswordResetEmail = async (data: {
     name: string;
     email: string;
@@ -358,65 +522,26 @@ export const sendPasswordResetEmail = async (data: {
 }) => {
     try {
         const transporter = createTransporter();
-        const expires = data.expiresInMinutes || 10;
-
-        const html = `
-<!DOCTYPE html>
-<html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f4f4f4;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:40px 0;">
-  <tr><td align="center">
-    <table width="580" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden;">
-      <tr>
-        <td style="background:linear-gradient(135deg,#C4122F 0%,#E8354F 100%);padding:36px 30px;text-align:center;">
-          <h1 style="color:#fff;margin:0;font-size:26px;font-weight:700;">🎓 Best IELTS BD</h1>
-          <p style="color:#fecdd3;margin:8px 0 0;font-size:14px;">Password Reset</p>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding:36px 30px;">
-          <h2 style="color:#1f2937;margin:0 0 12px;font-size:20px;">Hi ${data.name},</h2>
-          <p style="color:#4b5563;font-size:15px;line-height:1.6;margin:0 0 24px;">
-            We received a request to reset your password. Use the OTP below to reset it. This code is valid for <strong>${expires} minutes</strong>.
-          </p>
-          <div style="background:#fef2f2;border:2px dashed #C4122F;border-radius:12px;padding:24px;text-align:center;margin:0 0 24px;">
-            <p style="color:#6b7280;font-size:13px;margin:0 0 8px;text-transform:uppercase;letter-spacing:1px;">Your OTP Code</p>
-            <p style="color:#C4122F;font-size:42px;font-weight:900;margin:0;letter-spacing:8px;font-family:monospace;">${data.otp}</p>
-          </div>
-          <p style="color:#9ca3af;font-size:13px;line-height:1.6;margin:0;">
-            If you did not request this, please ignore this email. Your password will not change.<br>
-            <strong>Do not share this OTP with anyone.</strong>
-          </p>
-        </td>
-      </tr>
-      <tr>
-        <td style="background:#f9fafb;padding:20px 30px;text-align:center;border-top:1px solid #e5e7eb;">
-          <p style="color:#9ca3af;font-size:12px;margin:0;">© 2024 Best IELTS BD · bestieltsbd.com</p>
-        </td>
-      </tr>
-    </table>
-  </td></tr>
-</table>
-</body>
-</html>`;
-
         await transporter.sendMail({
             from: `"Best IELTS BD" <${process.env.EMAIL_USER}>`,
             to: data.email,
-            subject: `🔐 Your Password Reset OTP — ${data.otp}`,
-            html,
+            subject: `🔐 Your Password Reset Code — ${data.otp}`,
+            html: getPasswordResetTemplate({
+                name: data.name,
+                otp: data.otp,
+                expiresInMinutes: data.expiresInMinutes || 10,
+            }),
         });
-
         return { success: true };
     } catch (error) {
-        console.error("Failed to send password reset email:", error);
+        console.error("Failed to send OTP email:", error);
         return { success: false, error };
     }
 };
 
-// ── Combined Export ───────────────────────────────────────────────────────────
+// Combined export
 export const EmailService = {
+    sendWelcomeEmail,
     sendStudentRegistrationEmail,
     sendResultPublishedEmail,
     sendPasswordResetEmail,
