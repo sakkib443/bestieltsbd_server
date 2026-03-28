@@ -2,6 +2,7 @@ import { MockPackage, Purchase, Payment, Coupon } from "./mockPackage.model";
 import { Student } from "../student/student.model";
 import { User } from "../user/user.model";
 import { Types } from "mongoose";
+import { sendPurchaseConfirmationEmail } from "../../utils/email.service";
 
 // =================== MOCK PACKAGE SERVICE ===================
 
@@ -155,6 +156,20 @@ const claimFreeMock = async (userId: string) => {
         });
     }
 
+    // Send purchase confirmation email (non-blocking)
+    if (user) {
+        sendPurchaseConfirmationEmail({
+            name: user.name,
+            email: user.email,
+            packageTitle: freePkg.title + " (Free)",
+            bundleSize: 1,
+            amount: 0,
+            paymentMethod: "Free",
+            transactionId: "FREE-MOCK",
+            examIds: [examId],
+        }).catch(() => {});
+    }
+
     return {
         purchase,
         examId,
@@ -297,6 +312,20 @@ const purchaseMock = async (
     await MockPackage.findByIdAndUpdate(pkg._id, {
         $inc: { totalPurchases: bundleSize },
     });
+
+    // Send purchase confirmation email (non-blocking)
+    if (user) {
+        sendPurchaseConfirmationEmail({
+            name: user.name,
+            email: user.email,
+            packageTitle: pkg.title,
+            bundleSize,
+            amount: finalAmount,
+            paymentMethod,
+            transactionId,
+            examIds,
+        }).catch(() => {});
+    }
 
     return {
         purchases,

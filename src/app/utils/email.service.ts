@@ -539,10 +539,176 @@ export const sendPasswordResetEmail = async (data: {
     }
 };
 
+// ── Template 5: Purchase Confirmation ────────────────────────────────────────
+const getPurchaseConfirmationTemplate = (data: {
+    name: string;
+    packageTitle: string;
+    bundleSize: number;
+    amount: number;
+    paymentMethod: string;
+    transactionId: string;
+    examIds: string[];
+    purchasedAt: string;
+    dashboardUrl: string;
+}) => emailWrapper(`
+  <!-- HERO -->
+  <tr>
+    <td style="background:linear-gradient(180deg,#F0FDF4 0%,#ffffff 100%);padding:48px 40px 32px 40px;text-align:center;border-bottom:1px solid #A7F3D0;">
+      <div style="font-size:52px;margin-bottom:16px;">🛒</div>
+      <h1 style="color:#065F46;font-size:26px;font-weight:800;margin:0 0 8px 0;">Purchase Confirmed!</h1>
+      <p style="color:#6B7280;font-size:14px;margin:0;">Thank you for choosing Best IELTS BD.</p>
+    </td>
+  </tr>
+
+  <!-- BODY -->
+  <tr>
+    <td style="padding:36px 40px 24px 40px;">
+      <p style="color:#374151;font-size:15px;line-height:1.7;margin:0 0 28px 0;">
+        Hi <strong style="color:#C4122F;">${data.name}</strong>, your mock test purchase was successful! Here's your order summary:
+      </p>
+
+      <!-- Order Summary -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#F8FAFB;border:1.5px solid #E5E7EB;border-radius:14px;margin-bottom:24px;">
+        <tr>
+          <td style="padding:24px 28px;">
+            <p style="color:#6B7280;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;margin:0 0 18px 0;">Order Summary</p>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding:9px 0;border-bottom:1px solid #F3F4F6;">
+                  <span style="color:#9CA3AF;font-size:13px;">Package</span>
+                </td>
+                <td style="padding:9px 0;border-bottom:1px solid #F3F4F6;text-align:right;">
+                  <span style="color:#111827;font-size:13px;font-weight:700;">${data.packageTitle}</span>
+                </td>
+              </tr>
+              ${data.bundleSize > 1 ? `
+              <tr>
+                <td style="padding:9px 0;border-bottom:1px solid #F3F4F6;">
+                  <span style="color:#9CA3AF;font-size:13px;">Bundle Size</span>
+                </td>
+                <td style="padding:9px 0;border-bottom:1px solid #F3F4F6;text-align:right;">
+                  <span style="background:#EDE9FE;color:#6D28D9;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;">${data.bundleSize} Mock Tests</span>
+                </td>
+              </tr>` : ""}
+              <tr>
+                <td style="padding:9px 0;border-bottom:1px solid #F3F4F6;">
+                  <span style="color:#9CA3AF;font-size:13px;">Amount Paid</span>
+                </td>
+                <td style="padding:9px 0;border-bottom:1px solid #F3F4F6;text-align:right;">
+                  <span style="color:#059669;font-size:16px;font-weight:800;">৳${data.amount}</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:9px 0;border-bottom:1px solid #F3F4F6;">
+                  <span style="color:#9CA3AF;font-size:13px;">Payment Method</span>
+                </td>
+                <td style="padding:9px 0;border-bottom:1px solid #F3F4F6;text-align:right;">
+                  <span style="color:#374151;font-size:13px;font-weight:600;text-transform:capitalize;">${data.paymentMethod}</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:9px 0;border-bottom:1px solid #F3F4F6;">
+                  <span style="color:#9CA3AF;font-size:13px;">Transaction ID</span>
+                </td>
+                <td style="padding:9px 0;border-bottom:1px solid #F3F4F6;text-align:right;">
+                  <code style="color:#374151;font-size:12px;background:#F3F4F6;padding:2px 8px;border-radius:4px;">${data.transactionId}</code>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:9px 0;">
+                  <span style="color:#9CA3AF;font-size:13px;">Purchase Date</span>
+                </td>
+                <td style="padding:9px 0;text-align:right;">
+                  <span style="color:#374151;font-size:13px;">${data.purchasedAt}</span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Exam IDs -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#FFF5F7 0%,#FDE8EC 100%);border:1.5px solid #C4122F;border-radius:14px;margin-bottom:24px;">
+        <tr>
+          <td style="padding:22px 28px;">
+            <p style="color:#9B0E24;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 14px 0;">🎯 Your Exam ID${data.examIds.length > 1 ? "s" : ""}</p>
+            ${data.examIds.map((id, i) => `
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:${i < data.examIds.length - 1 ? "10px" : "0"};">
+              <tr>
+                <td>
+                  <span style="color:#6B7280;font-size:12px;">Mock Test ${i + 1}</span>
+                </td>
+                <td style="text-align:right;">
+                  <code style="background:#ffffff;color:#C4122F;font-size:17px;font-weight:800;padding:5px 16px;border-radius:8px;border:1px solid #FDE8EC;letter-spacing:1px;">${id}</code>
+                </td>
+              </tr>
+            </table>`).join("")}
+          </td>
+        </tr>
+      </table>
+
+      <!-- Next steps -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;">
+        <tr><td style="padding:18px 22px;">
+          <p style="color:#1E40AF;font-size:13px;font-weight:700;margin:0 0 8px 0;">📋 Next Steps:</p>
+          <ul style="color:#1E40AF;font-size:13px;margin:0;padding-left:18px;line-height:2;">
+            <li>Login to your dashboard to access your exam</li>
+            <li>Use a laptop or desktop for the best experience</li>
+            <li>Ensure a stable internet connection before starting</li>
+          </ul>
+        </td></tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- CTA -->
+  <tr>
+    <td style="padding:8px 40px 40px 40px;text-align:center;">
+      <a href="${data.dashboardUrl}" style="display:inline-block;background:linear-gradient(135deg,#C4122F,#9B0E24);color:#ffffff;text-decoration:none;padding:16px 48px;border-radius:10px;font-size:16px;font-weight:700;box-shadow:0 6px 20px rgba(196,18,47,0.35);">
+        🚀 &nbsp;Go to My Dashboard
+      </a>
+    </td>
+  </tr>
+`);
+
+// Purchase confirmation email
+export const sendPurchaseConfirmationEmail = async (data: {
+    name: string;
+    email: string;
+    packageTitle: string;
+    bundleSize: number;
+    amount: number;
+    paymentMethod: string;
+    transactionId: string;
+    examIds: string[];
+}) => {
+    try {
+        const transporter = createTransporter();
+        const dashboardUrl = `${process.env.FRONTEND_URL || "https://bestieltsbd.vercel.app"}/dashboard/student`;
+        await transporter.sendMail({
+            from: `"Best IELTS BD" <${process.env.EMAIL_USER}>`,
+            to: data.email,
+            subject: `✅ Purchase Confirmed — ${data.packageTitle} | Best IELTS BD`,
+            html: getPurchaseConfirmationTemplate({
+                ...data,
+                purchasedAt: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" }),
+                dashboardUrl,
+            }),
+        });
+        console.log("Purchase confirmation email sent:", data.email);
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to send purchase confirmation email:", error);
+        return { success: false, error };
+    }
+};
+
 // Combined export
 export const EmailService = {
     sendWelcomeEmail,
     sendStudentRegistrationEmail,
     sendResultPublishedEmail,
     sendPasswordResetEmail,
+    sendPurchaseConfirmationEmail,
 };
+
