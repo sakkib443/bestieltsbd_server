@@ -6,7 +6,9 @@ import { ListeningService } from "../listening/listening.service";
 import { ReadingService } from "../reading/reading.service";
 import { AutoMarkingService } from "../examSession/autoMarking.service";
 import { EmailService } from "../../utils/email.service";
-// Updated: questionText + isCorrect recalculation on backend v2
+import { gradeWritingWithAI } from "../../utils/aiGrading.service";
+import { WritingService } from "../writing/writing.service";
+// Updated: AI writing grading via Gemini API
 
 // Generate unique exam ID
 const generateExamId = async (): Promise<string> => {
@@ -901,25 +903,73 @@ const saveModuleScore = async (
             };
         }
     } else if (module === "writing") {
-        updateObj["scores.writing"] = {
-            task1Band: scoreData.band,
-            task2Band: scoreData.band,
-            overallBand: scoreData.band,
-        };
-        if (scoreData.answers) {
-            console.log("[saveModuleScore] Writing answers to save:", scoreData.answers);
-            const writingAnswers = {
-                task1: scoreData.answers.task1 || "",
-                task2: scoreData.answers.task2 || "",
-            };
-            updateObj["examAnswers.writing"] = writingAnswers;
-            if (hasMultipleSets && setNumber != null) {
-                updateObj[`examAnswers.writing_${setNumber}`] = writingAnswers;
-            }
-        } else {
-            console.log("[saveModuleScore] No writing answers in scoreData!");
+        const task1Text = scoreData.answers?.task1 || "";
+        const task2Text = scoreData.answers?.task2 || "";
+
+        // Save answers first
+        const writingAnswers = { task1: task1Text, task2: task2Text };
+        updateObj["examAnswers.writing"] = writingAnswers;
+        if (hasMultipleSets && setNumber != null) {
+            updateObj[`examAnswers.writing_${setNumber}`] = writingAnswers;
         }
-        // Also store per-set score
+
+        // === AI GRADING via Gemini ===
+        try {
+            console.log("[AI Writing] Starting Gemini grading for examId:", examId);
+
+            // Try to fetch writing prompt for context
+            let task1Prompt: string | undefined;
+            let task2Prompt: string | undefined;
+            try {
+                const writingSetNum = gradingSetNumber;
+                if (writingSetNum) {
+                    const writingTest = await WritingService.getWritingTestByNumber(writingSetNum, false);
+                    task1Prompt = writingTest?.tasks?.find((t: any) => t.taskNumber === 1)?.prompt;
+                    task2Prompt = writingTest?.tasks?.find((t: any) => t.taskNumber === 2)?.prompt;
+                }
+            } catch (fetchErr) {
+                console.warn("[AI Writing] Could not fetch writing prompts:", fetchErr);
+            }
+
+            const aiResult = await gradeWritingWithAI(task1Text, task2Text, task1Prompt, task2Prompt);
+
+            console.log("[AI Writing] Result:", JSON.stringify(aiResult, null, 2));
+
+            updateObj["scores.writing"] = {
+                task1Band: aiResult.task1Band,
+                task2Band: aiResult.task2Band,
+                overallBand: aiResult.overallBand,
+                // Detailed criteria
+                taskAchievement: aiResult.criteria.taskAchievement,
+                coherenceCohesion: aiResult.criteria.coherenceCohesion,
+                lexicalResource: aiResult.criteria.lexicalResource,
+                grammaticalAccuracy: aiResult.criteria.grammaticalAccuracy,
+                // AI feedback
+                aiFeedback: {
+                    overall: aiResult.feedback.overall,
+                    task1: aiResult.feedback.task1,
+                    task2: aiResult.feedback.task2,
+                    strengths: aiResult.feedback.strengths,
+                    improvements: aiResult.feedback.improvements,
+                },
+                wordCounts: aiResult.wordCounts,
+                aiGraded: aiResult.aiGraded,
+            };
+
+        } catch (aiErr: any) {
+            console.error("[AI Writing] Grading failed, using fallback:", aiErr.message);
+            // Safe fallback — never block exam completion
+            const wc1 = task1Text.trim().split(/\s+/).filter(Boolean).length;
+            const wc2 = task2Text.trim().split(/\s+/).filter(Boolean).length;
+            const fallbackBand = wc1 > 100 && wc2 > 200 ? 5.5 : 4.5;
+            updateObj["scores.writing"] = {
+                task1Band: fallbackBand,
+                task2Band: fallbackBand,
+                overallBand: fallbackBand,
+                aiGraded: false,
+            };
+        }
+
         if (hasMultipleSets && setNumber != null) {
             updateObj[`scores.writing_${setNumber}`] = updateObj["scores.writing"];
         }
@@ -973,7 +1023,28 @@ const saveModuleScore = async (
     if (currentCompletedCount >= totalExpected && updatedStudent.examStatus !== "completed") {
         updatedStudent.examStatus = "completed";
         updatedStudent.examCompletedAt = new Date();
+        updatedStudent.resultsPublished = true; // ← Auto-publish: no admin approval needed
         await updatedStudent.save();
+        console.log(`[AutoPublish] Results auto-published for ${examId}`);
+
+        // Auto-send result email
+        try {
+            const { sendResultPublishedEmail } = await import("../../utils/email.service");
+            await sendResultPublishedEmail({
+                studentName: updatedStudent.nameEnglish,
+                examId: updatedStudent.examId,
+                email: updatedStudent.email,
+                listeningBand: (updatedStudent.scores as any)?.listening?.band || 0,
+                readingBand: (updatedStudent.scores as any)?.reading?.band || 0,
+                writingBand: (updatedStudent.scores as any)?.writing?.overallBand || 0,
+                speakingBand: (updatedStudent.scores as any)?.speaking?.band || 0,
+                overallBand: (updatedStudent.scores as any)?.overall || 0,
+                examDate: updatedStudent.examCompletedAt as Date,
+            });
+            console.log(`[AutoEmail] Result email sent to ${updatedStudent.email}`);
+        } catch (emailErr: any) {
+            console.warn(`[AutoEmail] Failed to send result email: ${emailErr.message}`);
+        }
     } else if (updatedStudent.examStatus === "not-started") {
         updatedStudent.examStatus = "in-progress";
         await updatedStudent.save();

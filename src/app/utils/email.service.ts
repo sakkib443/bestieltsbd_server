@@ -349,8 +349,75 @@ export const sendResultPublishedEmail = async (data: {
     }
 };
 
+// ── Password Reset OTP Email ─────────────────────────────────────────────────
+export const sendPasswordResetEmail = async (data: {
+    name: string;
+    email: string;
+    otp: string;
+    expiresInMinutes?: number;
+}) => {
+    try {
+        const transporter = createTransporter();
+        const expires = data.expiresInMinutes || 10;
+
+        const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f4f4f4;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:40px 0;">
+  <tr><td align="center">
+    <table width="580" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.1);overflow:hidden;">
+      <tr>
+        <td style="background:linear-gradient(135deg,#C4122F 0%,#E8354F 100%);padding:36px 30px;text-align:center;">
+          <h1 style="color:#fff;margin:0;font-size:26px;font-weight:700;">🎓 Best IELTS BD</h1>
+          <p style="color:#fecdd3;margin:8px 0 0;font-size:14px;">Password Reset</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:36px 30px;">
+          <h2 style="color:#1f2937;margin:0 0 12px;font-size:20px;">Hi ${data.name},</h2>
+          <p style="color:#4b5563;font-size:15px;line-height:1.6;margin:0 0 24px;">
+            We received a request to reset your password. Use the OTP below to reset it. This code is valid for <strong>${expires} minutes</strong>.
+          </p>
+          <div style="background:#fef2f2;border:2px dashed #C4122F;border-radius:12px;padding:24px;text-align:center;margin:0 0 24px;">
+            <p style="color:#6b7280;font-size:13px;margin:0 0 8px;text-transform:uppercase;letter-spacing:1px;">Your OTP Code</p>
+            <p style="color:#C4122F;font-size:42px;font-weight:900;margin:0;letter-spacing:8px;font-family:monospace;">${data.otp}</p>
+          </div>
+          <p style="color:#9ca3af;font-size:13px;line-height:1.6;margin:0;">
+            If you did not request this, please ignore this email. Your password will not change.<br>
+            <strong>Do not share this OTP with anyone.</strong>
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td style="background:#f9fafb;padding:20px 30px;text-align:center;border-top:1px solid #e5e7eb;">
+          <p style="color:#9ca3af;font-size:12px;margin:0;">© 2024 Best IELTS BD · bestieltsbd.com</p>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
+
+        await transporter.sendMail({
+            from: `"Best IELTS BD" <${process.env.EMAIL_USER}>`,
+            to: data.email,
+            subject: `🔐 Your Password Reset OTP — ${data.otp}`,
+            html,
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to send password reset email:", error);
+        return { success: false, error };
+    }
+};
+
+// ── Combined Export ───────────────────────────────────────────────────────────
 export const EmailService = {
     sendStudentRegistrationEmail,
     sendResultPublishedEmail,
+    sendPasswordResetEmail,
 };
-
