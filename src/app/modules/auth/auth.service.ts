@@ -67,8 +67,10 @@ const googleLogin = async (googleData: {
     picture?: string;
 }) => {
     let user = await User.findOne({ email: googleData.email });
+    let isNewUser = false;
 
     if (!user) {
+        isNewUser = true;
         // Auto-create account for Google users
         user = await User.create({
             name: googleData.name,
@@ -79,6 +81,9 @@ const googleLogin = async (googleData: {
             role: "user",
             authProvider: "google",
         });
+
+        // Send welcome email (non-blocking)
+        sendWelcomeEmail({ name: user.name, email: user.email }).catch(() => {});
     } else {
         // Update googleId if not already stored
         if (!(user as any).googleId) {
@@ -105,8 +110,10 @@ const googleLogin = async (googleData: {
             picture: (user as any).picture || googleData.picture,
         },
         token,
+        isNewUser,
     };
 };
+
 
 const changePassword = async (userId: string, currentPassword: string, newPassword: string) => {
     const user = await User.findById(userId).select("+password");
