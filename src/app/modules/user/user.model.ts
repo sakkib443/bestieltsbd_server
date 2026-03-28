@@ -19,8 +19,8 @@ const userSchema = new Schema<IUser>(
         },
         phone: {
             type: String,
-            required: [true, "Phone number is required"],
             trim: true,
+            default: "",
         },
         nid: {
             type: String,
@@ -37,6 +37,9 @@ const userSchema = new Schema<IUser>(
             enum: ["user", "admin", "super-admin"],
             default: "user",
         },
+        googleId: { type: String },
+        picture: { type: String },
+        authProvider: { type: String, default: "local" },
     },
     {
         timestamps: true,
