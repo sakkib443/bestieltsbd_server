@@ -173,7 +173,9 @@ const claimFreeMock = async (userId: string) => {
                     listeningSetNumber: smartL,
                     readingSetNumber: smartR,
                     writingSetNumber: smartW,
-                }]
+                    speakingSetNumber: 1,
+                }],
+                speakingSetNumber: 1,
             },
             examStatus: "not-started",
             isActive: true,
@@ -374,13 +376,15 @@ const purchaseMock = async (
                 paymentAmount: Math.round(finalAmount / bundleSize),
                 paymentMethod: paymentMethod as any,
                 examDate: new Date(),
-                assignedSets: {
+                    assignedSets: {
                     fullSets: [{
                         label: `${pkg.title} (${i + 1}/${bundleSize})`,
                         listeningSetNumber: smartListeningSet,
                         readingSetNumber: smartReadingSet,
                         writingSetNumber: smartWritingSet,
-                    }]
+                        speakingSetNumber: 1,
+                    }],
+                    speakingSetNumber: 1,
                 },
                 examStatus: "not-started",
                 isActive: true,
@@ -609,9 +613,70 @@ const getAllPurchases = async () => {
     const purchases = await Purchase.find()
         .populate("userId", "name email phone")
         .populate("packageId", "title price isFree")
-        .populate("paymentId", "amount method transactionId")
+        .populate("paymentId", "amount method transactionId status")
         .sort({ purchasedAt: -1 });
     return purchases;
+};
+
+// Admin: Update purchase status (pause/activate/complete)
+const updatePurchaseStatus = async (purchaseId: string, status: string) => {
+    const validStatuses = ["active", "completed", "expired", "refunded", "paused"];
+    if (!validStatuses.includes(status)) {
+        throw new Error(`Invalid status. Must be one of: ${validStatuses.join(", ")}`);
+    }
+    const purchase = await Purchase.findByIdAndUpdate(
+        purchaseId,
+        { status },
+        { new: true }
+    ).populate("userId", "name email phone")
+     .populate("packageId", "title price isFree");
+    if (!purchase) throw new Error("Purchase not found");
+    return purchase;
+};
+
+// Admin: Delete a purchase and associated student record
+const deletePurchase = async (purchaseId: string) => {
+    const purchase = await Purchase.findById(purchaseId);
+    if (!purchase) throw new Error("Purchase not found");
+    
+    // Also delete the student record if linked
+    if (purchase.studentRecordId) {
+        await Student.findByIdAndDelete(purchase.studentRecordId);
+    }
+    // Delete via examId if no studentRecordId
+    if (purchase.examId) {
+        await Student.deleteOne({ examId: purchase.examId });
+    }
+    
+    await Purchase.findByIdAndDelete(purchaseId);
+    return { message: "Purchase and associated records deleted" };
+};
+
+// Admin: Bulk delete purchases
+const bulkDeletePurchases = async (purchaseIds: string[]) => {
+    let deleted = 0;
+    for (const id of purchaseIds) {
+        try {
+            await deletePurchase(id);
+            deleted++;
+        } catch (e) {
+            console.error(`Failed to delete purchase ${id}:`, e);
+        }
+    }
+    return { deleted, total: purchaseIds.length };
+};
+
+// Admin: Bulk update purchase status
+const bulkUpdateStatus = async (purchaseIds: string[], status: string) => {
+    const validStatuses = ["active", "completed", "expired", "refunded", "paused"];
+    if (!validStatuses.includes(status)) {
+        throw new Error(`Invalid status`);
+    }
+    const result = await Purchase.updateMany(
+        { _id: { $in: purchaseIds.map(id => new Types.ObjectId(id)) } },
+        { $set: { status } }
+    );
+    return { updated: result.modifiedCount, total: purchaseIds.length };
 };
 
 
@@ -627,6 +692,10 @@ export const MockPackageService = {
     purchaseMock,
     getMyPurchases,
     getAllPurchases,
+    updatePurchaseStatus,
+    deletePurchase,
+    bulkDeletePurchases,
+    bulkUpdateStatus,
     hasUsedFreeMock,
     getFreePackage,
     // Payments

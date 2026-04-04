@@ -91,7 +91,7 @@ const purchaseSchema = new Schema<IPurchase>(
         },
         status: {
             type: String,
-            enum: ["active", "completed", "expired", "refunded"],
+            enum: ["active", "completed", "expired", "refunded", "paused"],
             default: "active",
         },
         isFree: {

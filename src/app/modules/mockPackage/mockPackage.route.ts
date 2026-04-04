@@ -30,8 +30,16 @@ router.post("/packages", auth, authorize("admin"), MockPackageController.createP
 router.patch("/packages/:id", auth, authorize("admin"), MockPackageController.updatePackage);
 router.delete("/packages/:id", auth, authorize("admin"), MockPackageController.deletePackage);
 
-// All purchases (for Reports page)
+// All purchases (for Orders page)
 router.get("/purchases/all", auth, authorize("admin"), MockPackageController.getAllPurchases);
+// Update purchase status (pause, activate, etc.)
+router.patch("/purchases/:id/status", auth, authorize("admin"), MockPackageController.updatePurchaseStatus);
+// Delete purchase
+router.delete("/purchases/:id", auth, authorize("admin"), MockPackageController.deletePurchase);
+// Bulk delete purchases
+router.post("/purchases/bulk-delete", auth, authorize("admin"), MockPackageController.bulkDeletePurchases);
+// Bulk update status
+router.post("/purchases/bulk-status", auth, authorize("admin"), MockPackageController.bulkUpdateStatus);
 
 // Analytics
 router.get("/analytics", auth, authorize("admin"), MockPackageController.getAnalytics);

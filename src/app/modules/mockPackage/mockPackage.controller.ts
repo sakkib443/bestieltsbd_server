@@ -184,6 +184,51 @@ const getAllPurchases = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const updatePurchaseStatus = catchAsync(async (req: Request, res: Response) => {
+    const { status } = req.body;
+    const result = await MockPackageService.updatePurchaseStatus(req.params.id, status);
+    res.json({
+        success: true,
+        message: `Purchase status updated to ${status}`,
+        data: result,
+    });
+});
+
+const deletePurchase = catchAsync(async (req: Request, res: Response) => {
+    const result = await MockPackageService.deletePurchase(req.params.id);
+    res.json({
+        success: true,
+        message: "Purchase deleted successfully",
+        data: result,
+    });
+});
+
+const bulkDeletePurchases = catchAsync(async (req: Request, res: Response) => {
+    const { ids } = req.body;
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ success: false, message: "ids array is required" });
+    }
+    const result = await MockPackageService.bulkDeletePurchases(ids);
+    res.json({
+        success: true,
+        message: `${result.deleted} of ${result.total} purchases deleted`,
+        data: result,
+    });
+});
+
+const bulkUpdateStatus = catchAsync(async (req: Request, res: Response) => {
+    const { ids, status } = req.body;
+    if (!ids || !Array.isArray(ids) || ids.length === 0 || !status) {
+        return res.status(400).json({ success: false, message: "ids array and status required" });
+    }
+    const result = await MockPackageService.bulkUpdateStatus(ids, status);
+    res.json({
+        success: true,
+        message: `${result.updated} of ${result.total} purchases updated to ${status}`,
+        data: result,
+    });
+});
+
 export const MockPackageController = {
     createPackage,
     getAllPackages,
@@ -195,6 +240,10 @@ export const MockPackageController = {
     purchaseMock,
     getMyPurchases,
     getAllPurchases,
+    updatePurchaseStatus,
+    deletePurchase,
+    bulkDeletePurchases,
+    bulkUpdateStatus,
     checkFreeMockStatus,
     getPaymentHistory,
     getAnalytics,
