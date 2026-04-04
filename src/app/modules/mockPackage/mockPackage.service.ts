@@ -122,6 +122,41 @@ const claimFreeMock = async (userId: string) => {
     // Create student record for this exam
     const user = await User.findById(userId);
     if (user) {
+        // ═══ SMART SET DETECTION for free claim ═══
+        const existingRecords = await Student.find(
+            { userId: new Types.ObjectId(userId) },
+            { "assignedSets.fullSets": 1, "assignedSets.listeningSetNumber": 1, "assignedSets.readingSetNumber": 1, "assignedSets.writingSetNumber": 1 }
+        ).lean();
+
+        const usedL = new Set<number>();
+        const usedR = new Set<number>();
+        const usedW = new Set<number>();
+
+        for (const rec of existingRecords) {
+            const a = (rec as any).assignedSets || {};
+            if (a.listeningSetNumber) usedL.add(a.listeningSetNumber);
+            if (a.readingSetNumber) usedR.add(a.readingSetNumber);
+            if (a.writingSetNumber) usedW.add(a.writingSetNumber);
+            for (const fs of (a.fullSets || [])) {
+                if (fs.listeningSetNumber) usedL.add(fs.listeningSetNumber);
+                if (fs.readingSetNumber) usedR.add(fs.readingSetNumber);
+                if (fs.writingSetNumber) usedW.add(fs.writingSetNumber);
+            }
+        }
+
+        const MAX_SETS = 20;
+        const nextAvail = (base: number, used: Set<number>) => {
+            let c = base; let a = 0;
+            while (used.has(c) && a < MAX_SETS) { c++; if (c > MAX_SETS) c = 1; a++; }
+            return c;
+        };
+
+        const smartL = nextAvail(freePkg.examSets.listeningSetNumber, usedL);
+        const smartR = nextAvail(freePkg.examSets.readingSetNumber, usedR);
+        const smartW = nextAvail(freePkg.examSets.writingSetNumber, usedW);
+
+        console.log(`[SmartSetDetection-Free] User ${userId} → L:${smartL} R:${smartR} W:${smartW}`);
+
         const studentRecord = await Student.create({
             examId,
             nameEnglish: user.name,
@@ -135,9 +170,9 @@ const claimFreeMock = async (userId: string) => {
             assignedSets: {
                 fullSets: [{
                     label: freePkg.title,
-                    listeningSetNumber: freePkg.examSets.listeningSetNumber,
-                    readingSetNumber: freePkg.examSets.readingSetNumber,
-                    writingSetNumber: freePkg.examSets.writingSetNumber,
+                    listeningSetNumber: smartL,
+                    readingSetNumber: smartR,
+                    writingSetNumber: smartW,
                 }]
             },
             examStatus: "not-started",
@@ -243,15 +278,75 @@ const purchaseMock = async (
     const examIds: string[] = [];
     const purchases: any[] = [];
 
+    // ═══ SMART SET DETECTION ═══
+    // Find all set numbers this user has already been assigned (across all previous purchases).
+    // This ensures re-purchases always give new, unique sets.
+    const existingStudentRecords = await Student.find(
+        { userId: new Types.ObjectId(userId) },
+        { "assignedSets.fullSets": 1 }
+    ).lean();
+
+    // Collect all previously used set numbers for each module
+    const usedListeningSets = new Set<number>();
+    const usedReadingSets = new Set<number>();
+    const usedWritingSets = new Set<number>();
+
+    for (const rec of existingStudentRecords) {
+        const fullSets = (rec as any).assignedSets?.fullSets || [];
+        for (const fs of fullSets) {
+            if (fs.listeningSetNumber) usedListeningSets.add(fs.listeningSetNumber);
+            if (fs.readingSetNumber) usedReadingSets.add(fs.readingSetNumber);
+            if (fs.writingSetNumber) usedWritingSets.add(fs.writingSetNumber);
+        }
+        // Also check legacy single set format
+        const legacy = (rec as any).assignedSets || {};
+        if (legacy.listeningSetNumber) usedListeningSets.add(legacy.listeningSetNumber);
+        if (legacy.readingSetNumber) usedReadingSets.add(legacy.readingSetNumber);
+        if (legacy.writingSetNumber) usedWritingSets.add(legacy.writingSetNumber);
+    }
+
+    // Helper: find next available set number that hasn't been used
+    // Starts from baseSetNumber and increments; wraps around after maxSets
+    const MAX_AVAILABLE_SETS = 20; // adjust if you add more question sets
+    const getNextAvailableSet = (baseSetNumber: number, usedSets: Set<number>): number => {
+        let candidate = baseSetNumber;
+        let attempts = 0;
+        while (usedSets.has(candidate) && attempts < MAX_AVAILABLE_SETS) {
+            candidate = candidate + 1;
+            // Wrap around: if we exceed MAX_AVAILABLE_SETS, start from 1
+            if (candidate > MAX_AVAILABLE_SETS) candidate = 1;
+            attempts++;
+        }
+        // If all sets are used, just return the base (allow re-use as fallback)
+        return candidate;
+    };
+
+    // Track sets assigned in THIS purchase batch to avoid duplicates within the bundle
+    const batchListening = new Set<number>(usedListeningSets);
+    const batchReading = new Set<number>(usedReadingSets);
+    const batchWriting = new Set<number>(usedWritingSets);
+
     // Create N purchases for bundle
     for (let i = 0; i < bundleSize; i++) {
         const examId = await generateExamId();
         examIds.push(examId);
 
         // Pick exam sets: use bundleExamSets[i] if available, else fallback to examSets
-        const sets = (pkg.bundleExamSets && pkg.bundleExamSets[i])
+        const baseSets = (pkg.bundleExamSets && pkg.bundleExamSets[i])
             ? pkg.bundleExamSets[i]
             : pkg.examSets;
+
+        // Smart assignment: find the next unused set for each module
+        const smartListeningSet = getNextAvailableSet(baseSets.listeningSetNumber, batchListening);
+        const smartReadingSet = getNextAvailableSet(baseSets.readingSetNumber, batchReading);
+        const smartWritingSet = getNextAvailableSet(baseSets.writingSetNumber, batchWriting);
+
+        // Mark these as used for subsequent iterations in this batch
+        batchListening.add(smartListeningSet);
+        batchReading.add(smartReadingSet);
+        batchWriting.add(smartWritingSet);
+
+        console.log(`[SmartSetDetection] User ${userId} | Exam ${examId} | Base L:${baseSets.listeningSetNumber} R:${baseSets.readingSetNumber} W:${baseSets.writingSetNumber} → Smart L:${smartListeningSet} R:${smartReadingSet} W:${smartWritingSet}`);
 
         const purchase = await Purchase.create({
             userId: new Types.ObjectId(userId),
@@ -267,7 +362,7 @@ const purchaseMock = async (
 
         purchases.push(purchase);
 
-        // Create student record
+        // Create student record with SMART set numbers
         if (user) {
             const studentRecord = await Student.create({
                 examId,
@@ -282,9 +377,9 @@ const purchaseMock = async (
                 assignedSets: {
                     fullSets: [{
                         label: `${pkg.title} (${i + 1}/${bundleSize})`,
-                        listeningSetNumber: sets.listeningSetNumber,
-                        readingSetNumber: sets.readingSetNumber,
-                        writingSetNumber: sets.writingSetNumber,
+                        listeningSetNumber: smartListeningSet,
+                        readingSetNumber: smartReadingSet,
+                        writingSetNumber: smartWritingSet,
                     }]
                 },
                 examStatus: "not-started",
