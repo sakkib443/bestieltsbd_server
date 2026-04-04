@@ -639,17 +639,30 @@ const deletePurchase = async (purchaseId: string) => {
     const purchase = await Purchase.findById(purchaseId);
     if (!purchase) throw new Error("Purchase not found");
     
-    // Also delete the student record if linked
-    if (purchase.studentRecordId) {
-        await Student.findByIdAndDelete(purchase.studentRecordId);
+    // Try to delete associated student record
+    try {
+        if (purchase.studentRecordId) {
+            await Student.findByIdAndDelete(purchase.studentRecordId).catch(() => {});
+        }
+        if (purchase.examId) {
+            await Student.deleteMany({ examId: purchase.examId }).catch(() => {});
+        }
+    } catch (e) {
+        console.error("Error deleting student record:", e);
+        // Continue with purchase deletion even if student deletion fails
     }
-    // Delete via examId if no studentRecordId
-    if (purchase.examId) {
-        await Student.deleteOne({ examId: purchase.examId });
+    
+    // Also delete associated payment
+    try {
+        if (purchase.paymentId) {
+            await Payment.findByIdAndDelete(purchase.paymentId).catch(() => {});
+        }
+    } catch (e) {
+        console.error("Error deleting payment:", e);
     }
     
     await Purchase.findByIdAndDelete(purchaseId);
-    return { message: "Purchase and associated records deleted" };
+    return { message: "Purchase deleted successfully" };
 };
 
 // Admin: Bulk delete purchases
