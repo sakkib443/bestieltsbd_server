@@ -153,7 +153,7 @@ const paymentSchema = new Schema<IPayment>(
         },
         method: {
             type: String,
-            enum: ["bkash", "nagad", "ssl", "stripe", "bank", "free"],
+            enum: ["bkash", "nagad", "rocket", "ssl", "stripe", "bank", "free"],
             required: true,
         },
         status: {
