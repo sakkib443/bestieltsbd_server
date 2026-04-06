@@ -7,6 +7,7 @@ const router = Router();
 // =================== PUBLIC ROUTES ===================
 // Get active packages (for store page — no auth needed)
 router.get("/packages/active", MockPackageController.getActivePackages);
+router.get("/set-limits", MockPackageController.getSetLimits);
 router.get("/packages/:id", MockPackageController.getPackageById);
 
 // =================== AUTHENTICATED USER ROUTES ===================

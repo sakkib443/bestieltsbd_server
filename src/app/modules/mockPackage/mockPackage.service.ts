@@ -1,8 +1,29 @@
 import { MockPackage, Purchase, Payment, Coupon } from "./mockPackage.model";
 import { Student } from "../student/student.model";
 import { User } from "../user/user.model";
+import { ListeningTest } from "../listening/listening.model";
+import { ReadingTest } from "../reading/reading.model";
+import { WritingTest } from "../writing/writing.model";
 import { Types } from "mongoose";
 import { sendPurchaseConfirmationEmail } from "../../utils/email.service";
+
+// =================== DYNAMIC SET LIMITS ===================
+// Count actual active question sets in DB. Speaking is always 1 (shared set).
+const getAvailableSetCounts = async () => {
+    const [listeningCount, readingCount, writingCount] = await Promise.all([
+        ListeningTest.countDocuments({ isActive: true }),
+        ReadingTest.countDocuments({ isActive: true }),
+        WritingTest.countDocuments({ isActive: true }),
+    ]);
+    const maxSets = Math.min(listeningCount, readingCount, writingCount);
+    return {
+        listening: listeningCount,
+        reading: readingCount,
+        writing: writingCount,
+        maxSets, // a student can buy at most this many unique exams
+        speaking: "common (set 1 for all)",
+    };
+};
 
 // =================== MOCK PACKAGE SERVICE ===================
 
@@ -144,16 +165,19 @@ const claimFreeMock = async (userId: string) => {
             }
         }
 
-        const MAX_SETS = 20;
-        const nextAvail = (base: number, used: Set<number>) => {
+        const setCounts = await getAvailableSetCounts();
+        const MAX_SETS_L = setCounts.listening || 1;
+        const MAX_SETS_R = setCounts.reading || 1;
+        const MAX_SETS_W = setCounts.writing || 1;
+        const nextAvailModule = (base: number, used: Set<number>, maxForModule: number) => {
             let c = base; let a = 0;
-            while (used.has(c) && a < MAX_SETS) { c++; if (c > MAX_SETS) c = 1; a++; }
+            while (used.has(c) && a < maxForModule) { c++; if (c > maxForModule) c = 1; a++; }
             return c;
         };
 
-        const smartL = nextAvail(freePkg.examSets.listeningSetNumber, usedL);
-        const smartR = nextAvail(freePkg.examSets.readingSetNumber, usedR);
-        const smartW = nextAvail(freePkg.examSets.writingSetNumber, usedW);
+        const smartL = nextAvailModule(freePkg.examSets.listeningSetNumber, usedL, MAX_SETS_L);
+        const smartR = nextAvailModule(freePkg.examSets.readingSetNumber, usedR, MAX_SETS_R);
+        const smartW = nextAvailModule(freePkg.examSets.writingSetNumber, usedW, MAX_SETS_W);
 
         console.log(`[SmartSetDetection-Free] User ${userId} → L:${smartL} R:${smartR} W:${smartW}`);
 
@@ -263,6 +287,21 @@ const purchaseMock = async (
     // Use override bundleSize from frontend plan, otherwise use package bundleSize
     const bundleSize = bundleSizeOverride || pkg.bundleSize || 1;
 
+    // ═══ ENFORCE MAX SET LIMIT ═══
+    // Count how many exams this user already has + how many they want to buy
+    const existingPurchaseCount = await Purchase.countDocuments({
+        userId: new Types.ObjectId(userId),
+        status: { $in: ["active", "completed"] },
+    });
+    const setCounts = await getAvailableSetCounts();
+    const maxAllowed = setCounts.maxSets;
+    if (existingPurchaseCount + bundleSize > maxAllowed) {
+        const remaining = Math.max(0, maxAllowed - existingPurchaseCount);
+        throw new Error(
+            `সর্বোচ্চ ${maxAllowed}টি মক টেস্ট কেনা যায় (Listening: ${setCounts.listening}, Reading: ${setCounts.reading}, Writing: ${setCounts.writing} সেট আছে)। আপনি ইতিমধ্যে ${existingPurchaseCount}টি কিনেছেন। আরো ${remaining}টি কিনতে পারবেন।`
+        );
+    }
+
     // Create payment record (single payment for the whole bundle)
     const payment = await Payment.create({
         userId: new Types.ObjectId(userId),
@@ -308,18 +347,15 @@ const purchaseMock = async (
     }
 
     // Helper: find next available set number that hasn't been used
-    // Starts from baseSetNumber and increments; wraps around after maxSets
-    const MAX_AVAILABLE_SETS = 20; // adjust if you add more question sets
-    const getNextAvailableSet = (baseSetNumber: number, usedSets: Set<number>): number => {
+    // Uses ACTUAL module count from DB instead of hardcoded 20
+    const getNextAvailableSet = (baseSetNumber: number, usedSets: Set<number>, maxForModule: number): number => {
         let candidate = baseSetNumber;
         let attempts = 0;
-        while (usedSets.has(candidate) && attempts < MAX_AVAILABLE_SETS) {
+        while (usedSets.has(candidate) && attempts < maxForModule) {
             candidate = candidate + 1;
-            // Wrap around: if we exceed MAX_AVAILABLE_SETS, start from 1
-            if (candidate > MAX_AVAILABLE_SETS) candidate = 1;
+            if (candidate > maxForModule) candidate = 1;
             attempts++;
         }
-        // If all sets are used, just return the base (allow re-use as fallback)
         return candidate;
     };
 
@@ -339,9 +375,9 @@ const purchaseMock = async (
             : pkg.examSets;
 
         // Smart assignment: find the next unused set for each module
-        const smartListeningSet = getNextAvailableSet(baseSets.listeningSetNumber, batchListening);
-        const smartReadingSet = getNextAvailableSet(baseSets.readingSetNumber, batchReading);
-        const smartWritingSet = getNextAvailableSet(baseSets.writingSetNumber, batchWriting);
+        const smartListeningSet = getNextAvailableSet(baseSets.listeningSetNumber, batchListening, setCounts.listening);
+        const smartReadingSet = getNextAvailableSet(baseSets.readingSetNumber, batchReading, setCounts.reading);
+        const smartWritingSet = getNextAvailableSet(baseSets.writingSetNumber, batchWriting, setCounts.writing);
 
         // Mark these as used for subsequent iterations in this batch
         batchListening.add(smartListeningSet);
@@ -711,6 +747,8 @@ export const MockPackageService = {
     bulkUpdateStatus,
     hasUsedFreeMock,
     getFreePackage,
+    // Set Limits
+    getAvailableSetCounts,
     // Payments
     getPaymentHistory,
     // Analytics

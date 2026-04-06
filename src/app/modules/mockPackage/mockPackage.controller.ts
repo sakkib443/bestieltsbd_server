@@ -30,6 +30,15 @@ const getActivePackages = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+// Get available set counts per module (public)
+const getSetLimits = catchAsync(async (req: Request, res: Response) => {
+    const result = await MockPackageService.getAvailableSetCounts();
+    res.json({
+        success: true,
+        data: result,
+    });
+});
+
 const getPackageById = catchAsync(async (req: Request, res: Response) => {
     const result = await MockPackageService.getPackageById(req.params.id);
     res.json({
@@ -245,6 +254,7 @@ export const MockPackageController = {
     bulkDeletePurchases,
     bulkUpdateStatus,
     checkFreeMockStatus,
+    getSetLimits,
     getPaymentHistory,
     getAnalytics,
     validateCoupon,
