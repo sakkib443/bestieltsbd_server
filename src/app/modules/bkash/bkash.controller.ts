@@ -3,6 +3,7 @@ import catchAsync from "../../utils/catchAsync";
 import { BkashService } from "./bkash.service";
 import { MockPackageService } from "../mockPackage/mockPackage.service";
 import { Payment } from "../mockPackage/mockPackage.model";
+import { AffiliateService } from "../affiliate/affiliate.service";
 
 const FRONTEND_URL = process.env.FRONTEND_URL || "https://bestieltsbd.vercel.app";
 const BACKEND_URL = process.env.BACKEND_URL || "https://bestieltsbd-server.vercel.app";
@@ -14,7 +15,7 @@ const BACKEND_URL = process.env.BACKEND_URL || "https://bestieltsbd-server.verce
  */
 const createPayment = catchAsync(async (req: Request, res: Response) => {
     const userId = req.user._id;
-    const { packageId, bundleSize, couponCode, customPrice } = req.body;
+    const { packageId, bundleSize, couponCode, customPrice, referralCode } = req.body;
 
     if (!packageId) {
         return res.status(400).json({ success: false, message: "Package ID is required" });
@@ -68,6 +69,7 @@ const createPayment = catchAsync(async (req: Request, res: Response) => {
             bundleSize: bundleSize || 1,
             couponCode: couponCode || null,
             customPrice: customPrice || null,
+            referralCode: referralCode || null,
         },
     });
 
@@ -143,6 +145,22 @@ const handleCallback = catchAsync(async (req: Request, res: Response) => {
             bundleSize,
             customPrice
         );
+
+        // Create affiliate commission if referral code exists
+        const refCode = storedMeta.referralCode;
+        if (refCode) {
+            try {
+                await AffiliateService.createCommission(
+                    refCode,
+                    pendingPayment.userId.toString(),
+                    purchaseResult.purchases?.[0]?._id?.toString() || "",
+                    pendingPayment._id.toString(),
+                    pendingPayment.amount
+                );
+            } catch (affErr: any) {
+                console.error("[Affiliate Commission] Error:", affErr.message);
+            }
+        }
 
         // Redirect to success page with exam IDs
         const examIds = purchaseResult.examIds?.join(",") || purchaseResult.examId;
