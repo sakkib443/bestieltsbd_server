@@ -601,48 +601,6 @@ const getAnalytics = async () => {
     };
 };
 
-// Validate coupon
-const validateCoupon = async (code: string, packagePrice: number) => {
-    const coupon = await Coupon.findOne({
-        code: code.toUpperCase(),
-        isActive: true,
-        validFrom: { $lte: new Date() },
-        validUntil: { $gte: new Date() },
-    });
-
-    if (!coupon) throw new Error("Invalid or expired coupon code");
-    if (coupon.currentUses >= coupon.maxUses) throw new Error("This coupon has reached its usage limit");
-    if (packagePrice < coupon.minPurchase) throw new Error(`Minimum purchase amount is ৳${coupon.minPurchase}`);
-
-    let discount = 0;
-    if (coupon.discountType === "percentage") {
-        discount = Math.round((packagePrice * coupon.discountValue) / 100);
-    } else {
-        discount = coupon.discountValue;
-    }
-
-    return {
-        valid: true,
-        code: coupon.code,
-        discountType: coupon.discountType,
-        discountValue: coupon.discountValue,
-        discountAmount: discount,
-        finalPrice: Math.max(0, packagePrice - discount),
-    };
-};
-
-// CRUD for coupons
-const createCoupon = async (data: any, userId: string) => {
-    return await Coupon.create({ ...data, createdBy: userId });
-};
-
-const getAllCoupons = async () => {
-    return await Coupon.find().sort({ createdAt: -1 });
-};
-
-const deleteCoupon = async (id: string) => {
-    return await Coupon.findByIdAndDelete(id);
-};
 
 // Get ALL purchases (admin — for Reports page)
 const getAllPurchases = async () => {
@@ -728,6 +686,74 @@ const bulkUpdateStatus = async (purchaseIds: string[], status: string) => {
     return { updated: result.modifiedCount, total: purchaseIds.length };
 };
 
+// =================== COUPON SERVICE ===================
+
+const validateCoupon = async (code: string, packagePrice: number) => {
+    const coupon = await Coupon.findOne({ code: code.toUpperCase(), isActive: true });
+    if (!coupon) throw new Error("Invalid coupon code");
+
+    const now = new Date();
+    if (now < coupon.validFrom || now > coupon.validUntil) {
+        throw new Error("This coupon has expired");
+    }
+    if (coupon.currentUses >= coupon.maxUses) {
+        throw new Error("This coupon has reached its usage limit");
+    }
+    if (packagePrice < coupon.minPurchase) {
+        throw new Error(`Minimum purchase amount is ৳${coupon.minPurchase}`);
+    }
+
+    let discountAmount = 0;
+    let finalPrice = packagePrice;
+
+    if (coupon.discountType === "percentage") {
+        discountAmount = Math.round((packagePrice * coupon.discountValue) / 100);
+        finalPrice = packagePrice - discountAmount;
+    } else if (coupon.discountType === "fixed") {
+        discountAmount = Math.min(coupon.discountValue, packagePrice);
+        finalPrice = packagePrice - discountAmount;
+    } else if (coupon.discountType === "override") {
+        // Override: set exact price
+        finalPrice = coupon.discountValue;
+        discountAmount = packagePrice - finalPrice;
+    }
+
+    if (finalPrice < 0) finalPrice = 0;
+
+    return {
+        valid: true,
+        code: coupon.code,
+        discountType: coupon.discountType,
+        discountValue: coupon.discountValue,
+        discountAmount,
+        finalPrice,
+        originalPrice: packagePrice,
+    };
+};
+
+const createCoupon = async (data: any, userId: string) => {
+    const existing = await Coupon.findOne({ code: data.code?.toUpperCase() });
+    if (existing) throw new Error("A coupon with this code already exists");
+    const coupon = await Coupon.create({ ...data, code: data.code?.toUpperCase(), createdBy: userId });
+    return coupon;
+};
+
+const getAllCoupons = async () => {
+    const coupons = await Coupon.find().sort({ createdAt: -1 });
+    return coupons;
+};
+
+const updateCoupon = async (id: string, data: any) => {
+    const coupon = await Coupon.findByIdAndUpdate(id, data, { new: true });
+    if (!coupon) throw new Error("Coupon not found");
+    return coupon;
+};
+
+const deleteCoupon = async (id: string) => {
+    const coupon = await Coupon.findByIdAndDelete(id);
+    if (!coupon) throw new Error("Coupon not found");
+    return coupon;
+};
 
 export const MockPackageService = {
     // Packages
@@ -757,5 +783,6 @@ export const MockPackageService = {
     validateCoupon,
     createCoupon,
     getAllCoupons,
+    updateCoupon,
     deleteCoupon,
 };

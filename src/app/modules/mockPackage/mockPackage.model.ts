@@ -190,7 +190,7 @@ const couponSchema = new Schema<ICoupon>(
         },
         discountType: {
             type: String,
-            enum: ["percentage", "fixed"],
+            enum: ["percentage", "fixed", "override"],
             required: true,
         },
         discountValue: {

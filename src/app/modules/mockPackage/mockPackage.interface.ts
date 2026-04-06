@@ -76,7 +76,7 @@ export interface IPayment {
 // Coupon/Promo Code
 export interface ICoupon {
     code: string;
-    discountType: "percentage" | "fixed";
+    discountType: "percentage" | "fixed" | "override";
     discountValue: number;
     maxUses: number;
     currentUses: number;

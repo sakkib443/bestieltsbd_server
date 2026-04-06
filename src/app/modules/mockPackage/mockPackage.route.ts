@@ -48,6 +48,7 @@ router.get("/analytics", auth, authorize("admin"), MockPackageController.getAnal
 // Coupons
 router.get("/coupons", auth, authorize("admin"), MockPackageController.getAllCoupons);
 router.post("/coupons", auth, authorize("admin"), MockPackageController.createCoupon);
+router.patch("/coupons/:id", auth, authorize("admin"), MockPackageController.updateCoupon);
 router.delete("/coupons/:id", auth, authorize("admin"), MockPackageController.deleteCoupon);
 
 export const MockPackageRoutes = router;

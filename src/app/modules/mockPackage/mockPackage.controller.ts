@@ -185,6 +185,15 @@ const deleteCoupon = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const updateCoupon = catchAsync(async (req: Request, res: Response) => {
+    const result = await MockPackageService.updateCoupon(req.params.id, req.body);
+    res.json({
+        success: true,
+        message: "Coupon updated successfully",
+        data: result,
+    });
+});
+
 const getAllPurchases = catchAsync(async (req: Request, res: Response) => {
     const result = await MockPackageService.getAllPurchases();
     res.json({
@@ -260,5 +269,6 @@ export const MockPackageController = {
     validateCoupon,
     createCoupon,
     getAllCoupons,
+    updateCoupon,
     deleteCoupon,
 };
