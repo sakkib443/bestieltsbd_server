@@ -287,6 +287,8 @@ studentSchema.index({ examStatus: 1 });
 studentSchema.index({ paymentStatus: 1 });
 studentSchema.index({ examDate: 1 });
 studentSchema.index({ createdAt: -1 });
+studentSchema.index({ userId: 1 });
+studentSchema.index({ examCompletedAt: -1 });
 
 // Hash password before saving
 studentSchema.pre("save", async function (next) {

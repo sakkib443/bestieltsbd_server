@@ -80,4 +80,9 @@ const examSessionSchema = new Schema<IExamSession>(
     }
 );
 
+// Add indexes for common queries
+examSessionSchema.index({ examId: 1 });
+examSessionSchema.index({ status: 1 });
+examSessionSchema.index({ sessionId: 1 });
+
 export const ExamSession = model<IExamSession>("ExamSession", examSessionSchema);

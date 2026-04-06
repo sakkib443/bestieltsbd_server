@@ -367,8 +367,9 @@ const deleteStudent = async (id: string) => {
 // Verify exam ID for exam start
 const verifyExamId = async (examId: string) => {
     const student = await Student.findOne({ examId: examId.toUpperCase() })
-        .select("examId nameEnglish examStatus paymentStatus examDate isActive canRetake examSessionId assignedSets examStartedAt completedModules scores")
-        .lean();
+        .select("examId nameEnglish examStatus paymentStatus isActive canRetake examSessionId assignedSets examStartedAt completedModules scores")
+        .lean()
+        .maxTimeMS(5000);  // 5s query timeout — prevent infinite hang
 
     if (!student) {
         return { valid: false, message: "Invalid Exam ID" };
@@ -933,7 +934,7 @@ const saveModuleScore = async (
 
             const aiResult = await gradeWritingWithAI(task1Text, task2Text, task1Prompt, task2Prompt);
 
-            console.log("[AI Writing] Result:", JSON.stringify(aiResult, null, 2));
+            console.log("[AI Writing] Result: task1=", aiResult.task1Band, "task2=", aiResult.task2Band, "overall=", aiResult.overallBand);
 
             updateObj["scores.writing"] = {
                 task1Band: aiResult.task1Band,
@@ -995,11 +996,26 @@ const saveModuleScore = async (
         updateObj["scores.overall"] = AutoMarkingService.calculateOverallBand(bands);
     }
 
-    console.log("[saveModuleScore] Final updateObj:", JSON.stringify(updateObj, null, 2));
+    // Calculate total expected sets for completion check BEFORE the update
+    const listeningTotal = assignedSets.listeningSetNumbers?.length || (assignedSets.listeningSetNumber ? 1 : 0);
+    const readingTotal = assignedSets.readingSetNumbers?.length || (assignedSets.readingSetNumber ? 1 : 0);
+    const writingTotal = assignedSets.writingSetNumbers?.length || (assignedSets.writingSetNumber ? 1 : 0);
+    const totalExpected = Math.max(listeningTotal, 1) + Math.max(readingTotal, 1) + Math.max(writingTotal, 1);
 
-    console.log("[saveModuleScore] completedModuleKey:", completedModuleKey);
+    // Pre-check: will this submission complete the exam?
+    const currentCount = completedModules.length + 1; // +1 for the one we're about to add
+    const willComplete = currentCount >= totalExpected;
 
-    // Use findOneAndUpdate with $addToSet to avoid race conditions
+    // Set exam status in the SAME update to avoid a second .save()
+    if (willComplete) {
+        updateObj.examStatus = "completed";
+        updateObj.examCompletedAt = new Date();
+        updateObj.resultsPublished = true;
+    } else if (student.examStatus === "not-started") {
+        updateObj.examStatus = "in-progress";
+    }
+
+    // Single atomic update — no separate .save() needed
     const updatedStudent = await Student.findOneAndUpdate(
         { examId: examId.toUpperCase() },
         {
@@ -1013,24 +1029,11 @@ const saveModuleScore = async (
         throw new Error("Failed to update student");
     }
 
-    // Calculate total expected sets for completion check
-    const listeningTotal = assignedSets.listeningSetNumbers?.length || (assignedSets.listeningSetNumber ? 1 : 0);
-    const readingTotal = assignedSets.readingSetNumbers?.length || (assignedSets.readingSetNumber ? 1 : 0);
-    const writingTotal = assignedSets.writingSetNumbers?.length || (assignedSets.writingSetNumber ? 1 : 0);
-    const totalExpected = Math.max(listeningTotal, 1) + Math.max(readingTotal, 1) + Math.max(writingTotal, 1);
-
-    const currentCompletedCount = updatedStudent.completedModules?.length || 0;
-    if (currentCompletedCount >= totalExpected && updatedStudent.examStatus !== "completed") {
-        updatedStudent.examStatus = "completed";
-        updatedStudent.examCompletedAt = new Date();
-        updatedStudent.resultsPublished = true; // ← Auto-publish: no admin approval needed
-        await updatedStudent.save();
+    // Fire-and-forget: send completion email in background (don't block response)
+    if (willComplete) {
         console.log(`[AutoPublish] Results auto-published for ${examId}`);
-
-        // Auto-send result email
-        try {
-            const { sendResultPublishedEmail } = await import("../../utils/email.service");
-            await sendResultPublishedEmail({
+        import("../../utils/email.service").then(({ sendResultPublishedEmail }) => {
+            sendResultPublishedEmail({
                 studentName: updatedStudent.nameEnglish,
                 examId: updatedStudent.examId,
                 email: updatedStudent.email,
@@ -1040,17 +1043,13 @@ const saveModuleScore = async (
                 speakingBand: (updatedStudent.scores as any)?.speaking?.band || 0,
                 overallBand: (updatedStudent.scores as any)?.overall || 0,
                 examDate: updatedStudent.examCompletedAt as Date,
+            }).then(() => {
+                console.log(`[AutoEmail] Result email sent to ${updatedStudent.email}`);
+            }).catch((emailErr: any) => {
+                console.warn(`[AutoEmail] Failed: ${emailErr.message}`);
             });
-            console.log(`[AutoEmail] Result email sent to ${updatedStudent.email}`);
-        } catch (emailErr: any) {
-            console.warn(`[AutoEmail] Failed to send result email: ${emailErr.message}`);
-        }
-    } else if (updatedStudent.examStatus === "not-started") {
-        updatedStudent.examStatus = "in-progress";
-        await updatedStudent.save();
+        }).catch(() => {});
     }
-
-    console.log("[saveModuleScore] Updated student completedModules:", updatedStudent.completedModules);
 
     return {
         examId: updatedStudent.examId,
@@ -1058,7 +1057,7 @@ const saveModuleScore = async (
         setNumber: setNumber,
         band: scoreData.band,
         completedModules: updatedStudent.completedModules,
-        allCompleted: currentCompletedCount >= totalExpected,
+        allCompleted: willComplete,
         scores: updatedStudent.scores,
     };
 };

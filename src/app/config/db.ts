@@ -15,13 +15,15 @@ export const connectDB = async (): Promise<typeof mongoose> => {
         return connectionPromise;
     }
 
-    // Create new connection
+    // Create new connection with optimized settings for serverless
     connectionPromise = mongoose.connect(process.env.DATABASE_URL as string, {
-        maxPoolSize: 10,
-        minPoolSize: 2,
-        serverSelectionTimeoutMS: 5000,
-        socketTimeoutMS: 45000,
+        maxPoolSize: 5,           // Reduced for serverless (fewer concurrent ops)
+        minPoolSize: 1,           // Keep at least 1 alive
+        serverSelectionTimeoutMS: 3000,  // Fail faster on connection issues
+        socketTimeoutMS: 30000,   // Reduced from 45s — fail faster on stuck queries
+        heartbeatFrequencyMS: 10000,     // Keep connection alive with heartbeats
         bufferCommands: false,
+        autoIndex: process.env.NODE_ENV !== "production",  // Skip index building in prod
     }).then((db) => {
         isConnected = true;
         console.log("MongoDB connected (cached)");
@@ -30,6 +32,12 @@ export const connectDB = async (): Promise<typeof mongoose> => {
         connectionPromise = null;
         isConnected = false;
         throw err;
+    });
+
+    // Listen for disconnection events to reset state
+    mongoose.connection.on("disconnected", () => {
+        isConnected = false;
+        connectionPromise = null;
     });
 
     return connectionPromise;
