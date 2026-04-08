@@ -516,31 +516,45 @@ const getAnalytics = async () => {
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
+    // Get all existing purchase IDs to filter revenue only from active purchases
+    const existingPurchases = await Purchase.find({}, { paymentId: 1, userId: 1, purchasedAt: 1 }).lean();
+    const existingPaymentIds = existingPurchases
+        .map(p => p.paymentId)
+        .filter(Boolean);
+    const existingUserIds = [...new Set(existingPurchases.map(p => p.userId?.toString()).filter(Boolean))];
+    const todayUserIds = [...new Set(
+        existingPurchases
+            .filter(p => p.purchasedAt && new Date(p.purchasedAt) >= today)
+            .map(p => p.userId?.toString())
+            .filter(Boolean)
+    )];
+
     const [
         totalRevenue,
         todayRevenue,
         monthRevenue,
-        totalStudents,
-        todayStudents,
-        totalPurchases,
         totalExamsTaken,
         avgScore,
     ] = await Promise.all([
-        Payment.aggregate([
-            { $match: { status: "completed", method: { $ne: "free" } } },
-            { $group: { _id: null, total: { $sum: "$amount" } } },
-        ]),
-        Payment.aggregate([
-            { $match: { status: "completed", method: { $ne: "free" }, paidAt: { $gte: today } } },
-            { $group: { _id: null, total: { $sum: "$amount" } } },
-        ]),
-        Payment.aggregate([
-            { $match: { status: "completed", method: { $ne: "free" }, paidAt: { $gte: thisMonth } } },
-            { $group: { _id: null, total: { $sum: "$amount" } } },
-        ]),
-        User.countDocuments({ role: "user" }),
-        User.countDocuments({ role: "user", createdAt: { $gte: today } }),
-        Purchase.countDocuments(),
+        // Revenue only from payments linked to existing purchases
+        existingPaymentIds.length > 0
+            ? Payment.aggregate([
+                { $match: { _id: { $in: existingPaymentIds }, status: "completed", method: { $ne: "free" } } },
+                { $group: { _id: null, total: { $sum: "$amount" } } },
+            ])
+            : Promise.resolve([]),
+        existingPaymentIds.length > 0
+            ? Payment.aggregate([
+                { $match: { _id: { $in: existingPaymentIds }, status: "completed", method: { $ne: "free" }, paidAt: { $gte: today } } },
+                { $group: { _id: null, total: { $sum: "$amount" } } },
+            ])
+            : Promise.resolve([]),
+        existingPaymentIds.length > 0
+            ? Payment.aggregate([
+                { $match: { _id: { $in: existingPaymentIds }, status: "completed", method: { $ne: "free" }, paidAt: { $gte: thisMonth } } },
+                { $group: { _id: null, total: { $sum: "$amount" } } },
+            ])
+            : Promise.resolve([]),
         Student.countDocuments({ examStatus: "completed" }),
         Student.aggregate([
             { $match: { "scores.overall": { $exists: true, $gt: 0 } } },
@@ -548,35 +562,117 @@ const getAnalytics = async () => {
         ]),
     ]);
 
-    // Revenue by method
-    const revenueByMethod = await Payment.aggregate([
-        { $match: { status: "completed", method: { $ne: "free" } } },
-        { $group: { _id: "$method", total: { $sum: "$amount" }, count: { $sum: 1 } } },
-    ]);
+    // Students = unique users who have active purchases (mock test buyers)
+    const totalStudents = existingUserIds.length;
+    const todayStudents = todayUserIds.length;
+    const totalPurchases = existingPurchases.length;
+
+    // Users = all registered accounts
+    const totalUsers = await User.countDocuments({ role: "user" });
+    const todayUsers = await User.countDocuments({ role: "user", createdAt: { $gte: today } });
+
+    // Revenue by method — only from existing purchases
+    const revenueByMethod = existingPaymentIds.length > 0
+        ? await Payment.aggregate([
+            { $match: { _id: { $in: existingPaymentIds }, status: "completed", method: { $ne: "free" } } },
+            { $group: { _id: "$method", total: { $sum: "$amount" }, count: { $sum: 1 } } },
+        ])
+        : [];
 
     // Monthly revenue trend (last 6 months)
     const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
-    const monthlyRevenue = await Payment.aggregate([
-        { $match: { status: "completed", method: { $ne: "free" }, paidAt: { $gte: sixMonthsAgo } } },
-        {
-            $group: {
-                _id: {
-                    year: { $year: "$paidAt" },
-                    month: { $month: "$paidAt" },
+    const monthlyRevenue = existingPaymentIds.length > 0
+        ? await Payment.aggregate([
+            { $match: { _id: { $in: existingPaymentIds }, status: "completed", method: { $ne: "free" }, paidAt: { $gte: sixMonthsAgo } } },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$paidAt" },
+                        month: { $month: "$paidAt" },
+                    },
+                    total: { $sum: "$amount" },
+                    count: { $sum: 1 },
                 },
-                total: { $sum: "$amount" },
-                count: { $sum: 1 },
             },
-        },
-        { $sort: { "_id.year": 1, "_id.month": 1 } },
-    ]);
+            { $sort: { "_id.year": 1, "_id.month": 1 } },
+        ])
+        : [];
 
     // Recent purchases (last 10)
     const recentPurchases = await Purchase.find()
         .populate("userId", "name email")
         .populate("packageId", "title price")
+        .populate("paymentId", "amount method couponCode discountAmount payerPhone paidAt")
         .sort({ purchasedAt: -1 })
         .limit(10);
+
+    // ── Daily breakdown (last 30 days) for sparkline charts ──
+    const thirtyDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29);
+
+    const [dailyRevenue, dailyPurchases, dailyRegistrations] = await Promise.all([
+        // Daily revenue
+        Payment.aggregate([
+            { $match: { status: "completed", method: { $ne: "free" }, paidAt: { $gte: thirtyDaysAgo } } },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$paidAt" },
+                        month: { $month: "$paidAt" },
+                        day: { $dayOfMonth: "$paidAt" },
+                    },
+                    total: { $sum: "$amount" },
+                    count: { $sum: 1 },
+                },
+            },
+            { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } },
+        ]),
+        // Daily purchases
+        Purchase.aggregate([
+            { $match: { purchasedAt: { $gte: thirtyDaysAgo } } },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$purchasedAt" },
+                        month: { $month: "$purchasedAt" },
+                        day: { $dayOfMonth: "$purchasedAt" },
+                    },
+                    count: { $sum: 1 },
+                },
+            },
+            { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } },
+        ]),
+        // Daily registrations
+        User.aggregate([
+            { $match: { role: "user", createdAt: { $gte: thirtyDaysAgo } } },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt" },
+                        month: { $month: "$createdAt" },
+                        day: { $dayOfMonth: "$createdAt" },
+                    },
+                    count: { $sum: 1 },
+                },
+            },
+            { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } },
+        ]),
+    ]);
+
+    // Build 30-day arrays (fill gaps with 0)
+    const buildDailyArray = (data: any[], valueKey: string = "count") => {
+        const result: number[] = [];
+        for (let i = 0; i < 30; i++) {
+            const d = new Date(thirtyDaysAgo.getTime() + i * 86400000);
+            const found = data.find(
+                (x: any) => x._id.year === d.getFullYear() && x._id.month === d.getMonth() + 1 && x._id.day === d.getDate()
+            );
+            result.push(found ? found[valueKey] || 0 : 0);
+        }
+        return result;
+    };
+
+    // Today's purchases count
+    const todayPurchases = await Purchase.countDocuments({ purchasedAt: { $gte: today } });
 
     return {
         revenue: {
@@ -586,16 +682,26 @@ const getAnalytics = async () => {
             byMethod: revenueByMethod,
             monthly: monthlyRevenue,
         },
+        users: {
+            total: totalUsers,
+            today: todayUsers,
+        },
         students: {
             total: totalStudents,
             today: todayStudents,
         },
         purchases: {
             total: totalPurchases,
+            today: todayPurchases,
         },
         exams: {
             total: totalExamsTaken,
             averageScore: avgScore[0]?.avg ? Math.round(avgScore[0].avg * 10) / 10 : 0,
+        },
+        daily: {
+            revenue: buildDailyArray(dailyRevenue, "total"),
+            purchases: buildDailyArray(dailyPurchases, "count"),
+            registrations: buildDailyArray(dailyRegistrations, "count"),
         },
         recentPurchases,
     };
