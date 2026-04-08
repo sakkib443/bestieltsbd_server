@@ -197,9 +197,9 @@ const claimFreeMock = async (userId: string) => {
                     listeningSetNumber: smartL,
                     readingSetNumber: smartR,
                     writingSetNumber: smartW,
-                    speakingSetNumber: 1,
+                    // speakingSetNumber: 1, // Speaking temporarily skipped
                 }],
-                speakingSetNumber: 1,
+                // speakingSetNumber: 1, // Speaking temporarily skipped
             },
             examStatus: "not-started",
             isActive: true,
@@ -418,9 +418,9 @@ const purchaseMock = async (
                         listeningSetNumber: smartListeningSet,
                         readingSetNumber: smartReadingSet,
                         writingSetNumber: smartWritingSet,
-                        speakingSetNumber: 1,
+                        // speakingSetNumber: 1, // Speaking temporarily skipped
                     }],
-                    speakingSetNumber: 1,
+                    // speakingSetNumber: 1, // Speaking temporarily skipped
                 },
                 examStatus: "not-started",
                 isActive: true,
