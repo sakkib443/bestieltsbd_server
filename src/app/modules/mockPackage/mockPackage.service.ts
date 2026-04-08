@@ -478,7 +478,7 @@ const getMyPurchases = async (userId: string) => {
         userId: new Types.ObjectId(userId),
     })
         .populate("packageId")
-        .populate("paymentId", "amount method transactionId paidAt discountAmount couponCode")
+        .populate("paymentId", "amount method transactionId paidAt discountAmount couponCode payerPhone status")
         .sort({ purchasedAt: -1 });
 
     // Enrich with student data (scores, status)
@@ -607,7 +607,7 @@ const getAllPurchases = async () => {
     const purchases = await Purchase.find()
         .populate("userId", "name email phone")
         .populate("packageId", "title price isFree")
-        .populate("paymentId", "amount method transactionId status")
+        .populate("paymentId", "amount method transactionId paidAt discountAmount couponCode payerPhone status")
         .sort({ purchasedAt: -1 });
     return purchases;
 };

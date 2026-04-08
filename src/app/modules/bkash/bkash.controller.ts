@@ -124,6 +124,7 @@ const handleCallback = catchAsync(async (req: Request, res: Response) => {
         pendingPayment.status = "completed";
         pendingPayment.transactionId = execResult.trxID;
         pendingPayment.paidAt = new Date();
+        (pendingPayment as any).payerPhone = execResult.customerMsisdn || "";
         pendingPayment.gatewayResponse = {
             ...((pendingPayment.gatewayResponse as any) || {}),
             executeResult: execResult,

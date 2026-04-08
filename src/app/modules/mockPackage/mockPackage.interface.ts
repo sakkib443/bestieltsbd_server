@@ -68,6 +68,7 @@ export interface IPayment {
     couponCode?: string;
     discountAmount?: number;
     refundReason?: string;
+    payerPhone?: string;
     paidAt?: Date;
     createdAt?: Date;
     updatedAt?: Date;

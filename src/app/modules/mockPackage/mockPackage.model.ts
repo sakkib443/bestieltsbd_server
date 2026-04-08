@@ -170,6 +170,7 @@ const paymentSchema = new Schema<IPayment>(
             default: 0,
         },
         refundReason: String,
+        payerPhone: String,
         paidAt: Date,
     },
     { timestamps: true }
