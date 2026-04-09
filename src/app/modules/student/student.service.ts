@@ -127,6 +127,12 @@ const createStudent = async (
         examDate: student.examDate,
     }).catch(err => console.error("Failed to send registration email:", err));
 
+    // Create admin notification (async, don't wait)
+    import("../notification/notification.service").then(({ NotificationService }) => {
+        NotificationService.createStudentNotification(data.nameEnglish, student.examId, data.email)
+            .catch(err => console.error("[Notification] Failed to create student notification:", err));
+    });
+
     return {
         student: {
             _id: student._id,
@@ -1048,6 +1054,12 @@ const saveModuleScore = async (
             }).catch((emailErr: any) => {
                 console.warn(`[AutoEmail] Failed: ${emailErr.message}`);
             });
+        }).catch(() => {});
+
+        // Admin notification: exam completed
+        import("../notification/notification.service").then(({ NotificationService }) => {
+            NotificationService.createExamDoneNotification(updatedStudent.nameEnglish, updatedStudent.examId)
+                .catch((err: any) => console.error("[Notification] Exam done notify failed:", err));
         }).catch(() => {});
     }
 

@@ -163,6 +163,18 @@ const handleCallback = catchAsync(async (req: Request, res: Response) => {
             }
         }
 
+        // Admin notification: mock purchase
+        import("../notification/notification.service").then(({ NotificationService }) => {
+            const pkg = purchaseResult.package;
+            const user = purchaseResult.user;
+            NotificationService.createMockPurchaseNotification(
+                user?.name || "A user",
+                pkg?.name || "Mock Package",
+                pendingPayment.amount,
+                user?.email || ""
+            ).catch(() => {});
+        }).catch(() => {});
+
         // Redirect to success page with exam IDs
         const examIds = purchaseResult.examIds?.join(",") || purchaseResult.examId;
         return res.redirect(
