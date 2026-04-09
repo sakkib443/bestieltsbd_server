@@ -1808,7 +1808,7 @@ export const StudentService = {
 // ============================================================
 // Get Correction Data — Returns full questions + student answers merged
 // ============================================================
-async function getCorrectionData(email: string, module: "listening" | "reading" | "writing") {
+async function getCorrectionData(email: string, module: "listening" | "reading" | "writing", overrideSetNumber?: number) {
     // Find student by email
     const student = await Student.findOne({ email })
         .select("examId nameEnglish assignedSets examAnswers scores resultsPublished")
@@ -1824,8 +1824,8 @@ async function getCorrectionData(email: string, module: "listening" | "reading" 
 
     const assignedSets = (student.assignedSets || {}) as any;
 
-    // Determine set number
-    const setNumber =
+    // Determine set number — use explicitly requested set or fall back to assigned
+    const setNumber = overrideSetNumber ||
         assignedSets?.fullSets?.[0]?.[`${module}SetNumber`] ||
         assignedSets?.[`${module}SetNumber`] ||
         assignedSets?.[`${module}SetNumbers`]?.[0];

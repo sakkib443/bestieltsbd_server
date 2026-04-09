@@ -519,7 +519,9 @@ const getCorrectionData = async (req: Request, res: Response) => {
             });
         }
 
-        const result = await StudentService.getCorrectionData(email, module as "listening" | "reading" | "writing");
+        const setNumber = req.query.set ? parseInt(req.query.set as string) : undefined;
+
+        const result = await StudentService.getCorrectionData(email, module as "listening" | "reading" | "writing", setNumber);
 
         res.status(200).json({
             success: true,
