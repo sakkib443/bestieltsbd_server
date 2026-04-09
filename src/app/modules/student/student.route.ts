@@ -75,6 +75,9 @@ router.post("/save-module-score", StudentController.saveModuleScore);
 // Get current student profile
 router.get("/my-profile", auth, StudentController.getMyProfile);
 
+// Get correction data for a module (listening/reading) — after results published
+router.get("/my-correction/:module", auth, StudentController.getCorrectionData);
+
 // Get student by exam ID
 router.get("/exam/:examId", auth, StudentController.getStudentByExamId);
 

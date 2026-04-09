@@ -503,12 +503,44 @@ const getMyProfile = async (req: Request, res: Response) => {
     }
 };
 
+// Get correction data for a module (student — after results published)
+const getCorrectionData = async (req: Request, res: Response) => {
+    try {
+        const email = (req as any).user?.email;
+        if (!email) {
+            return res.status(401).json({ success: false, message: "Unauthorized" });
+        }
+
+        const { module } = req.params;
+        if (!["listening", "reading", "writing"].includes(module)) {
+            return res.status(400).json({
+                success: false,
+                message: "Module must be 'listening', 'reading', or 'writing'",
+            });
+        }
+
+        const result = await StudentService.getCorrectionData(email, module as "listening" | "reading" | "writing");
+
+        res.status(200).json({
+            success: true,
+            message: "Correction data retrieved successfully",
+            data: result,
+        });
+    } catch (error: any) {
+        res.status(400).json({
+            success: false,
+            message: error.message || "Failed to get correction data",
+        });
+    }
+};
+
 export const StudentController = {
     createStudent,
     getAllStudents,
     getStudentById,
     getStudentByExamId,
     getMyProfile,
+    getCorrectionData,
     updateStudent,
     deleteStudent,
     verifyExamId,

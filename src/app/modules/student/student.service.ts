@@ -1802,4 +1802,178 @@ export const StudentService = {
     updateAllScores,
     publishResults,
     resetModule,
+    getCorrectionData,
 };
+
+// ============================================================
+// Get Correction Data — Returns full questions + student answers merged
+// ============================================================
+async function getCorrectionData(email: string, module: "listening" | "reading" | "writing") {
+    // Find student by email
+    const student = await Student.findOne({ email })
+        .select("examId nameEnglish assignedSets examAnswers scores resultsPublished")
+        .lean();
+
+    if (!student) {
+        throw new Error("Student not found");
+    }
+
+    if (!student.resultsPublished) {
+        throw new Error("Results have not been published yet");
+    }
+
+    const assignedSets = (student.assignedSets || {}) as any;
+
+    // Determine set number
+    const setNumber =
+        assignedSets?.fullSets?.[0]?.[`${module}SetNumber`] ||
+        assignedSets?.[`${module}SetNumber`] ||
+        assignedSets?.[`${module}SetNumbers`]?.[0];
+
+    if (!setNumber && module !== "writing") {
+        throw new Error(`No ${module} set assigned to this student`);
+    }
+
+    // Get student's exam answers for this module
+    const examAnswers = (student.examAnswers as any)?.[module] || [];
+    // Build quick lookup map: questionNumber -> {studentAnswer, correctAnswer, isCorrect}
+    const answerMap: Record<number, { studentAnswer: string; correctAnswer: string; isCorrect: boolean }> = {};
+    if (Array.isArray(examAnswers)) {
+        examAnswers.forEach((a: any) => {
+            answerMap[a.questionNumber] = {
+                studentAnswer: a.studentAnswer || "",
+                correctAnswer: a.correctAnswer || "",
+                isCorrect: a.isCorrect === true,
+            };
+        });
+    }
+
+    // Get score info
+    const scores = (student.scores as any) || {};
+    const moduleScore = scores[module] || {};
+
+    if (module === "listening") {
+        // Fetch full listening test WITH questions (include answers for correction — student already submitted)
+        const test = await ListeningService.getListeningTestByNumber(setNumber, true);
+
+        // Merge student answers into each question
+        const sectionsWithAnswers = (test.sections || []).map((section: any) => ({
+            sectionNumber: section.sectionNumber,
+            title: section.title,
+            context: section.context || "",
+            passage: section.passage || "",
+            audioUrl: section.audioUrl || (test as any).mainAudioUrl || "",
+            instructions: section.instructions || "",
+            imageUrl: section.imageUrl || "",
+            questions: (section.questions || [])
+                .filter((q: any) => q.blockType !== "instruction" && q.questionNumber)
+                .map((q: any) => ({
+                    questionNumber: q.questionNumber,
+                    questionType: q.questionType || "fill-in-blank",
+                    questionText: q.questionText || q.content || "",
+                    options: q.options || [],
+                    correctAnswer: q.correctAnswer,
+                    studentAnswer: answerMap[q.questionNumber]?.studentAnswer || "",
+                    isCorrect: answerMap[q.questionNumber]?.isCorrect ?? null,
+                })),
+        }));
+
+        return {
+            module: "listening",
+            testTitle: (test as any).title || `Listening Mock Test #${setNumber}`,
+            setNumber,
+            score: {
+                raw: moduleScore.raw || moduleScore.correctAnswers || 0,
+                band: moduleScore.band || 0,
+                total: moduleScore.totalQuestions || 40,
+            },
+            sections: sectionsWithAnswers,
+        };
+    } else if (module === "reading") {
+        // Fetch full reading test WITH questions
+        const test = await ReadingService.getReadingTestByNumber(setNumber, true);
+
+        const sectionsWithAnswers = (test.sections || []).map((section: any) => ({
+            sectionNumber: section.sectionNumber,
+            title: section.title || "",
+            passage: section.passage || "",
+            instructions: section.instructions || "",
+            imageUrl: section.imageUrl || "",
+            questionGroups: section.questionGroups || [],
+            questions: (section.questions || []).map((q: any) => ({
+                questionNumber: q.questionNumber,
+                questionType: q.questionType || "fill-in-blank",
+                questionText: q.questionText || "",
+                options: q.options || [],
+                headingsList: q.headingsList || [],
+                wordList: q.wordList || [],
+                correctAnswer: q.correctAnswer,
+                studentAnswer: answerMap[q.questionNumber]?.studentAnswer || "",
+                isCorrect: answerMap[q.questionNumber]?.isCorrect ?? null,
+            })),
+        }));
+
+        return {
+            module: "reading",
+            testTitle: (test as any).title || `Reading Mock Test #${setNumber}`,
+            setNumber,
+            score: {
+                raw: moduleScore.raw || moduleScore.correctAnswers || 0,
+                band: moduleScore.band || 0,
+                total: moduleScore.totalQuestions || 40,
+            },
+            sections: sectionsWithAnswers,
+        };
+    } else {
+        // ── WRITING MODULE ─────────────────────────────────────────────
+        const writingAnswers = (student.examAnswers as any)?.writing || {};
+        const task1Text: string = writingAnswers.task1 || "";
+        const task2Text: string = writingAnswers.task2 || "";
+        const wScore = (student.scores as any)?.writing || {};
+
+        // Try to fetch writing prompts
+        let tasks: { taskNumber: number; prompt: string; imageUrl?: string; minWords: number; taskType?: string }[] = [];
+        try {
+            if (setNumber) {
+                const writingTest = await WritingService.getWritingTestByNumber(setNumber, false);
+                tasks = ((writingTest as any).tasks || []).map((t: any) => ({
+                    taskNumber: t.taskNumber,
+                    prompt: t.prompt || t.question || "",
+                    imageUrl: t.imageUrl || "",
+                    minWords: t.taskNumber === 1 ? 150 : 250,
+                    taskType: t.taskType || "",
+                }));
+            }
+        } catch (err) {
+            console.warn("[getCorrectionData] Could not fetch writing prompts:", err);
+        }
+
+        // Word counts
+        const wc1 = task1Text.trim() ? task1Text.trim().split(/\s+/).filter(Boolean).length : 0;
+        const wc2 = task2Text.trim() ? task2Text.trim().split(/\s+/).filter(Boolean).length : 0;
+
+        return {
+            module: "writing",
+            testTitle: `Writing Mock Test #${setNumber}`,
+            setNumber,
+            score: {
+                task1Band: wScore.task1Band || 0,
+                task2Band: wScore.task2Band || 0,
+                overallBand: wScore.overallBand || 0,
+                taskAchievement: wScore.taskAchievement,
+                coherenceCohesion: wScore.coherenceCohesion,
+                lexicalResource: wScore.lexicalResource,
+                grammaticalAccuracy: wScore.grammaticalAccuracy,
+                aiFeedback: wScore.aiFeedback || null,
+                wordCounts: { task1: wc1, task2: wc2 },
+                aiGraded: wScore.aiGraded === true,
+            },
+            tasks,
+            responses: {
+                task1: task1Text,
+                task2: task2Text,
+            },
+        };
+    }
+}
+
