@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 // Generate IELTS Exam ID format: BACIELTS250001
-// MC = Mizan's Care, IELTS, YY = Year, NNNNN = Sequential number
+// MC = Best IELTS BD, IELTS, YY = Year, NNNNN = Sequential number
 export const generateExamId = async (): Promise<string> => {
     const year = new Date().getFullYear().toString().slice(-2); // "25" for 2025
     const prefix = `BACIELTS${year}`;

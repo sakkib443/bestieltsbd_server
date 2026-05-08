@@ -3,8 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { WritingTest } from '../src/app/modules/writing/writing.model';
 
-const uri = "mongodb+srv://mizanscare:mizanscare@cluster0.b5kfivm.mongodb.net/mizanscare?appName=Cluster0";
-const imageDir = path.resolve(__dirname, "../../mizanscare-client/public/mock/writingimg");
+const uri = "mongodb+srv://besiieltsbd:besiieltsbd@cluster0.b5kfivm.mongodb.net/besiieltsbd?appName=Cluster0";
+const imageDir = path.resolve(__dirname, "../../bestieltsbd_client/public/mock/writingimg");
 
 async function run() {
     try {

@@ -11,9 +11,9 @@ const register = async (userData: IUser) => {
         throw new Error("User with this email already exists");
     }
 
-    // Auto-assign admin role for mizanscare emails
+    // Auto-assign admin role for bestieltsbd emails
     const emailDomain = userData.email.toLowerCase().split("@")[1];
-    if (emailDomain === "mizanscare.com") {
+    if (emailDomain === "bestieltsbd.com") {
         userData.role = "admin";
     }
 

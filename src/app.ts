@@ -8,10 +8,12 @@ import { ensureDbConnection } from "./app/config/db";
 const app: Application = express();
 
 // middleware
-app.use(express.json());
+// Bumped JSON body limit to 25 MB so the AI-chat endpoint can accept base64-encoded images / PDFs.
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ extended: true, limit: "25mb" }));
 app.use(cors({
   origin: [
-    "https://mizansieltsmock.ftitbd.com",
+    "https://bestieltsbd.vercel.app",
     "http://localhost:3000",
   ],
   credentials: true,
@@ -39,7 +41,7 @@ app.use("/api", router);
 app.get("/", (req: Request, res: Response) => {
   res.json({
     success: true,
-    message: "Mizan's Care IELTS API is running!",
+    message: "Best IELTS BD API is running!",
     version: "1.0.0",
   });
 });

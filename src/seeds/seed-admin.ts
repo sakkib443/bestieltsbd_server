@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 dotenv.config();
 
 const MONGODB_URI =
-  process.env.DATABASE_URL || "mongodb://localhost:27017/mizanscare";
+  process.env.DATABASE_URL || "mongodb://localhost:27017/besiieltsbd";
 
 async function seedAdmin() {
   try {

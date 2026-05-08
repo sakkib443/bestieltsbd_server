@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const DB_URL = 'mongodb+srv://mizanscare:mizanscare@cluster0.b5kfivm.mongodb.net/mizanscare?appName=Cluster0';
+const DB_URL = 'mongodb+srv://besiieltsbd:besiieltsbd@cluster0.b5kfivm.mongodb.net/besiieltsbd?appName=Cluster0';
 
 async function analyzeReading() {
     try {

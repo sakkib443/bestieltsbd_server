@@ -10,12 +10,12 @@
 
 | Purpose | File Path |
 |---------|-----------|
-| **Seed Scripts** | `mizanscare-server/src/scripts/seedReadingTestXX.ts` |
-| **MongoDB Schema** | `mizanscare-server/src/app/modules/reading/reading.model.ts` |
-| **Exam Page (Student)** | `mizanscare-client/src/app/exam/[examId]/reading/page.jsx` |
-| **Admin Create** | `mizanscare-client/src/app/dashboard/admin/reading/create/page.jsx` |
-| **Admin Edit** | `mizanscare-client/src/app/dashboard/admin/reading/edit/[testId]/page.jsx` |
-| **This Guide** | `mizanscare-server/src/scripts/READING_FORMAT_GUIDE.md` |
+| **Seed Scripts** | `bestieltsbd_server/src/scripts/seedReadingTestXX.ts` |
+| **MongoDB Schema** | `bestieltsbd_server/src/app/modules/reading/reading.model.ts` |
+| **Exam Page (Student)** | `bestieltsbd_client/src/app/exam/[examId]/reading/page.jsx` |
+| **Admin Create** | `bestieltsbd_client/src/app/dashboard/admin/reading/create/page.jsx` |
+| **Admin Edit** | `bestieltsbd_client/src/app/dashboard/admin/reading/edit/[testId]/page.jsx` |
+| **This Guide** | `bestieltsbd_server/src/scripts/READING_FORMAT_GUIDE.md` |
 
 ---
 

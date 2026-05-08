@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { ReadingTest } from '../src/app/modules/reading/reading.model';
 
-const uri = "mongodb+srv://mizanscare:mizanscare@cluster0.b5kfivm.mongodb.net/mizanscare?appName=Cluster0";
+const uri = "mongodb+srv://besiieltsbd:besiieltsbd@cluster0.b5kfivm.mongodb.net/besiieltsbd?appName=Cluster0";
 
 const passageText = `A. Melting land ice in the Arctic is set to cause a global rise in sea levels, leading to disastrous effects for both man and wildlife. Many species worldwide are threatened with extinction, and low-lying islands and land masses will disappear entirely. But the havoc wreaked by the effect of greenhouse gases won’t be confined to just too much water, but the absence of it, as well. In other words, desertification. A decrease in the total amount of rainfall in arid and semi-arid areas could increase the total area of drylands worldwide, and thus the total amount of land potentially at risk from desertification.
 

@@ -5,7 +5,7 @@ import { IReadingTest, IReadingSection, IReadingQuestion } from '../src/app/modu
 import { ReadingTest } from '../src/app/modules/reading/reading.model';
 import { User } from '../src/app/modules/user/user.model';
 
-const uri = "mongodb+srv://mizanscare:mizanscare@cluster0.b5kfivm.mongodb.net/mizanscare?appName=Cluster0";
+const uri = "mongodb+srv://besiieltsbd:besiieltsbd@cluster0.b5kfivm.mongodb.net/besiieltsbd?appName=Cluster0";
 
 function parseAnswers(ansText: string): Record<number, string> {
     const answers: Record<number, string> = {};

@@ -1,7 +1,7 @@
 /**
  * Detects the "duplicate options list" bug in listening seed files.
  *
- * Bug: Frontend at mizanscare-client/.../listening/page.jsx auto-renders
+ * Bug: Frontend at bestieltsbd_client/.../listening/page.jsx auto-renders
  * an options box for `matching` / `map-labeling` questions when ANY option
  * string length > 4 (i.e. has descriptive text like "A. Louise Bagshaw").
  *

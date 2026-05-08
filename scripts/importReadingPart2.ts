@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { ReadingTest } from '../src/app/modules/reading/reading.model';
 
-const uri = "mongodb+srv://mizanscare:mizanscare@cluster0.b5kfivm.mongodb.net/mizanscare?appName=Cluster0";
+const uri = "mongodb+srv://besiieltsbd:besiieltsbd@cluster0.b5kfivm.mongodb.net/besiieltsbd?appName=Cluster0";
 
 const passageText = `A. Language lovers, just like music lovers, enjoy variety. For the latter there's Mozart, The Rolling Stones and Beyonce. For the former there's English, French, Swahili, Urdu... the list is endless. But what about those poor overworked students who find learning difficult, confusing languages a drudge? Wouldn't it put a smile on their faces if there were just one simple, easy-to-learn tongue that would cut their study time by years? Well, of course, it exists. It's called Esperanto, and it's been around for more than 120 years. Esperanto is the most widely spoken artificially constructed international language. The name derives from Doktoro Esperanto, the pseudonym under which L. L. Zamenhof first published his Unua Libro in 1887. The phrase itself means 'one who hopes'. Zamenhof's goal was to create an easy and flexible language as a universal second language to promote peace and international understanding.
 

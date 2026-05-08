@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { ReadingTest } from '../src/app/modules/reading/reading.model';
 import { User } from '../src/app/modules/user/user.model';
 
-const uri = "mongodb+srv://mizanscare:mizanscare@cluster0.b5kfivm.mongodb.net/mizanscare?appName=Cluster0";
+const uri = "mongodb+srv://besiieltsbd:besiieltsbd@cluster0.b5kfivm.mongodb.net/besiieltsbd?appName=Cluster0";
 
 const section3 = {
     sectionNumber: 3,

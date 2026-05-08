@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const SOURCE_DB = "mongodb+srv://bac-ielts:bac-ielts@cluster0.b5kfivm.mongodb.net/bac-ielts?retryWrites=true&w=majority&appName=Cluster0";
-const DEST_DB = process.env.DATABASE_URL || "mongodb+srv://mizanscare:mizanscare@cluster0.b5kfivm.mongodb.net/mizanscare?appName=Cluster0";
+const DEST_DB = process.env.DATABASE_URL || "mongodb+srv://besiieltsbd:besiieltsbd@cluster0.b5kfivm.mongodb.net/besiieltsbd?appName=Cluster0";
 
 async function migrate() {
     try {
@@ -16,7 +16,7 @@ async function migrate() {
         console.log("✅ Source DB connected!");
 
         // Connect to DESTINATION database
-        console.log("🔗 Connecting to DESTINATION database (mizanscare)...");
+        console.log("🔗 Connecting to DESTINATION database (bestieltsbd)...");
         const destConn = await mongoose.createConnection(DEST_DB).asPromise();
         const destDb = destConn.db;
         if (!destDb) throw new Error("Destination DB connection failed");

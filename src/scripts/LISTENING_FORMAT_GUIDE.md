@@ -11,17 +11,17 @@
 
 | Purpose | File Path |
 |---------|-----------|
-| **Seed Scripts** | `mizanscare-server/src/scripts/seedListeningTestXX.ts` |
-| **MongoDB Schema** | `mizanscare-server/src/app/modules/listening/listening.model.ts` |
-| **TypeScript Interface** | `mizanscare-server/src/app/modules/listening/listening.interface.ts` |
-| **Grading Service** | `mizanscare-server/src/app/modules/listening/listening.service.ts` |
-| **Routes** | `mizanscare-server/src/app/modules/listening/listening.route.ts` |
-| **Exam Page (Student)** | `mizanscare-client/src/app/exam/[examId]/listening/page.jsx` |
-| **Admin Create** | `mizanscare-client/src/app/dashboard/admin/listening/create/page.jsx` |
-| **Admin Edit** | `mizanscare-client/src/app/dashboard/admin/listening/edit/[testId]/page.jsx` |
-| **Source Materials** | `mizanscare-client/public/mock/mock-XX/listening.docx` (or `.rtf`) |
-| **Answer Keys** | `mizanscare-client/public/mock/mock-XX/*.ANS.docx` (যখন আলাদা থাকে) |
-| **This Guide** | `mizanscare-server/src/scripts/LISTENING_FORMAT_GUIDE.md` |
+| **Seed Scripts** | `bestieltsbd_server/src/scripts/seedListeningTestXX.ts` |
+| **MongoDB Schema** | `bestieltsbd_server/src/app/modules/listening/listening.model.ts` |
+| **TypeScript Interface** | `bestieltsbd_server/src/app/modules/listening/listening.interface.ts` |
+| **Grading Service** | `bestieltsbd_server/src/app/modules/listening/listening.service.ts` |
+| **Routes** | `bestieltsbd_server/src/app/modules/listening/listening.route.ts` |
+| **Exam Page (Student)** | `bestieltsbd_client/src/app/exam/[examId]/listening/page.jsx` |
+| **Admin Create** | `bestieltsbd_client/src/app/dashboard/admin/listening/create/page.jsx` |
+| **Admin Edit** | `bestieltsbd_client/src/app/dashboard/admin/listening/edit/[testId]/page.jsx` |
+| **Source Materials** | `bestieltsbd_client/public/mock/mock-XX/listening.docx` (or `.rtf`) |
+| **Answer Keys** | `bestieltsbd_client/public/mock/mock-XX/*.ANS.docx` (যখন আলাদা থাকে) |
+| **This Guide** | `bestieltsbd_server/src/scripts/LISTENING_FORMAT_GUIDE.md` |
 
 ---
 
@@ -895,7 +895,7 @@ Short-answer question যার `questionText`-এ inline `___` blank নেই,
 
 ## 🎯 GRADING & ANSWER NORMALIZATION
 
-Backend [`listening.service.ts`](mizanscare-server/src/app/modules/listening/listening.service.ts) এর `gradeListeningAnswers` function প্রতিটা student answer compare করার আগে normalize করে:
+Backend [`listening.service.ts`](bestieltsbd_server/src/app/modules/listening/listening.service.ts) এর `gradeListeningAnswers` function প্রতিটা student answer compare করার আগে normalize করে:
 
 ```typescript
 const normalizeAnswer = (ans) =>
@@ -1129,7 +1129,7 @@ seedListeningTestXX();
 ### Run Command
 
 ```bash
-cd mizanscare-server
+cd bestieltsbd_server
 npx ts-node src/scripts/seedListeningTestXX.ts
 ```
 
@@ -1471,7 +1471,7 @@ content: "<strong>Destination: Harbour City</strong>"
 
 ## 📂 MOCK FOLDER SOURCE FILES REFERENCE
 
-প্রতিটা test number (01-20)-এর source materials `mizanscare-client/public/mock/mock-XX/`-এ:
+প্রতিটা test number (01-20)-এর source materials `bestieltsbd_client/public/mock/mock-XX/`-এ:
 
 | File | Purpose |
 |------|---------|

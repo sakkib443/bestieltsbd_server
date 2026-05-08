@@ -75,7 +75,7 @@ const initialContent = [
         category: "homepage_text" as const,
         label: "Hero — Title Line 1 (red)",
         description: "First line of the hero title (red color).",
-        textValue: "Mizan's Care",
+        textValue: "Best IELTS BD",
     },
     {
         contentKey: "text.hero_title_line2",
