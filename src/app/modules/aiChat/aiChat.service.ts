@@ -11,7 +11,7 @@ import {
     AIChatTopic,
 } from "./aiChat.interface";
 
-const MODEL_NAME = "gemini-1.5-flash"; // multimodal, fast, supports image + PDF
+const MODEL_NAME = "gemini-1.5-flash-latest"; // multimodal, fast, supports image + PDF
 const apiKey = process.env.GEMINI_API_KEY || "";
 
 if (!apiKey) {
@@ -20,7 +20,7 @@ if (!apiKey) {
     console.warn("⚠️  GEMINI_API_KEY missing — AI chat endpoint will fail.");
 }
 
-const genAI = new GoogleGenerativeAI(apiKey);
+const genAI = new GoogleGenerativeAI(apiKey, { apiVersion: "v1" });
 
 const SYSTEM_PROMPTS: Record<AIChatTopic, string> = {
     listening: LISTENING_SYSTEM_PROMPT,
