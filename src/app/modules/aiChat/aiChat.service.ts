@@ -11,7 +11,7 @@ import {
     AIChatTopic,
 } from "./aiChat.interface";
 
-const MODEL_NAME = "gemini-2.0-flash"; // multimodal, fast, supports image + PDF
+const MODEL_NAME = "gemini-1.5-flash"; // multimodal, fast, supports image + PDF
 const apiKey = process.env.GEMINI_API_KEY || "";
 
 if (!apiKey) {
